@@ -11,14 +11,12 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    ChessPiece[][] board;
+    private ChessPiece[][] board;
+
     public ChessBoard() {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                board[i][j] = null;
-            }
-        }
+        board = new ChessPiece[8][8];
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -41,7 +39,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        throw new RuntimeException("Not implemented");
+        board[position.getRow()][position.getColumn()] = piece;
     }
 
     /**
@@ -60,6 +58,12 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        for (int i=0; i<8; i++) {
+            for (int j=0; j<8; j++) {
+                if (i==0 || i==7) {
+                    //addPiece(Position(i+1, j+1), ChessPiece(Pawn));
+                }
+            }
+        }
     }
 }
