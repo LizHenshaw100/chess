@@ -11,7 +11,7 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private ChessPiece[][] board;
+    public ChessPiece[][] board = new ChessPiece[8][8];
 
     public ChessBoard() {
         board = new ChessPiece[8][8];
@@ -58,12 +58,68 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
+        ChessPiece.PieceType[] piece_order = {
+                ChessPiece.PieceType.ROOK,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.QUEEN,
+                ChessPiece.PieceType.KING,
+                ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.ROOK
+        };
         for (int i=0; i<8; i++) {
             for (int j=0; j<8; j++) {
-                if (i==0 || i==7) {
-                    //addPiece(Position(i+1, j+1), ChessPiece(Pawn));
+                // white pawns
+                if (i==1) {
+                    addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+                }
+                // black pawns
+                else if (i==6) {
+                    addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+                }
+                // null space
+                else if ((i > 1) && (i < 6)) {
+                    addPiece(new ChessPosition(i+1, j+1), null);
+                }
+                // white first row
+                else if (i==0) {
+                    j = 0;
+                    for (ChessPiece.PieceType type : piece_order) {
+                        addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.WHITE, type));
+                        j++;
+                    }
+                    break;
+                }
+                // black first row
+                else {
+                    j = 0;
+                    for (ChessPiece.PieceType type : piece_order) {
+                        addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.BLACK, type));
+                        j++;
+                    }
+                    break;
                 }
             }
         }
+        System.out.println(board);
+    }
+
+    @Override
+    public String toString() {
+        String chessboard = "Chess Board:\n";
+        for (int i=0; i<8; i++)
+        {
+            for (ChessPiece piece : board[i]) {
+                if (piece!=null) {
+                    chessboard = chessboard + piece;
+                }
+                else {
+                    chessboard = chessboard + ".";
+                }
+            }
+            chessboard = chessboard + "\n";
+        }
+        return chessboard;
     }
 }

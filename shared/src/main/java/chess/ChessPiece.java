@@ -1,6 +1,9 @@
 package chess;
 
 import java.util.Collection;
+import java.util.Objects;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Represents a single chess piece
@@ -11,10 +14,19 @@ import java.util.Collection;
 public class ChessPiece {
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType type;
+    private Map<ChessPiece.PieceType, String> name_abbreviations;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
+        //The abbreviations for chess pieces
+        this.name_abbreviations = new HashMap<>();
+        name_abbreviations.put(PieceType.KING, "K");
+        name_abbreviations.put(PieceType.QUEEN, "Q");
+        name_abbreviations.put(PieceType.BISHOP, "B");
+        name_abbreviations.put(PieceType.KNIGHT, "k");
+        name_abbreviations.put(PieceType.ROOK, "R");
+        name_abbreviations.put(PieceType.PAWN, "p");
     }
 
     /**
@@ -28,6 +40,8 @@ public class ChessPiece {
         ROOK,
         PAWN
     }
+
+
 
     /**
      * @return Which team this chess piece belongs to
@@ -43,6 +57,7 @@ public class ChessPiece {
         return type;
     }
 
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -51,7 +66,25 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        //throw new RuntimeException("Not implemented");
-        return null;
+        return getMovesOf(type);
+    }
+
+    @Override
+    public String toString() {
+        return name_abbreviations.get(type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
     }
 }
