@@ -16,8 +16,8 @@ public class ChessPosition {
         if ((x < 1) || (x > 8) || (y < 1) || (y > 8)) {
             throw new RuntimeException("Coordinate out of bounds");
         }
-        row = x - 1;
-        col = y - 1;
+        row = x;
+        col = y;
     }
 
     /**
