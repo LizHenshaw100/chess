@@ -5,20 +5,24 @@ import java.util.Objects;
 
 public class ChessMovesCalculator {
     private ChessPiece.PieceType type;
-    private 
+    private ChessGame.TeamColor team;
     private ChessBoard board;
     private ChessPosition myPosition;
     private ChessInterface SpecializedCalculator;
 
-    public ChessMovesCalculator(ChessPiece.PieceType type, ChessBoard newBoard, ChessPosition newPosition) {
+    public ChessMovesCalculator(ChessPiece.PieceType type, ChessGame.TeamColor team, ChessBoard newBoard, ChessPosition newPosition) {
         this.type = type;
+        this.team = team;
         this.board = newBoard;
         this.myPosition = newPosition;
         //if (type == ChessPiece.PieceType.PAWN) {
             //this.SpecializedCalculator = new
         //}
         if (type == ChessPiece.PieceType.BISHOP) {
-            this.SpecializedCalculator = new BishopMoveCalculator(board, myPosition, );
+            this.SpecializedCalculator = new BishopMoveCalculator(board, myPosition, team);
+        }
+        else if (type == ChessPiece.PieceType.ROOK) {
+            this.SpecializedCalculator = new BishopMoveCalculator(board, myPosition, team);
         }
     }
 

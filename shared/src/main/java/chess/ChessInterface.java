@@ -12,7 +12,12 @@ public interface ChessInterface {
         return false;
     }
 
-    default boolean isFriendly(ChessBoard board, ChessPosition position) {
-        if (board.getPiece(position) ==
+    default boolean isFriendly(ChessBoard board, ChessPosition position, ChessGame.TeamColor color) {
+        if (board.getPiece(position).getTeamColor() == color) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

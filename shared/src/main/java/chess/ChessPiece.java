@@ -66,7 +66,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ChessMovesCalculator calculator = new ChessMovesCalculator(type, board, myPosition);
+        ChessMovesCalculator calculator = new ChessMovesCalculator(type, pieceColor, board, myPosition);
         return calculator.pieceMoves(board, myPosition);
     }
 
