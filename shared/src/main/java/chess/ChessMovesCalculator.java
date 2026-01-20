@@ -28,6 +28,9 @@ public class ChessMovesCalculator {
         else if (type == ChessPiece.PieceType.QUEEN) {
             this.SpecializedCalculator = new QueenMoveCalculator(board, myPosition, team);
         }
+        else if (type == ChessPiece.PieceType.KING) {
+            this.SpecializedCalculator = new KingMoveCalculator(board, myPosition, team);
+        }
 
     }
 

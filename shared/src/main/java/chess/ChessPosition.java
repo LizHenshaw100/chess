@@ -13,9 +13,10 @@ public class ChessPosition {
     int col;
 
     public ChessPosition(int x, int y) {
-        if ((x < 1) || (x > 8) || (y < 1) || (y > 8)) {
-            throw new RuntimeException("Coordinate out of bounds");
-        }
+        //If you want to uncomment this, modify the KingMoveCalculator class
+        //if ((x < 1) || (x > 8) || (y < 1) || (y > 8)) {
+            //throw new RuntimeException("Coordinate out of bounds");
+        //}
         row = x;
         col = y;
     }
@@ -34,6 +35,14 @@ public class ChessPosition {
      */
     public int getColumn() {
         return col;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
     }
 
     @Override

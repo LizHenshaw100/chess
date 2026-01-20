@@ -20,4 +20,8 @@ public interface ChessInterface {
             return false;
         }
     }
+
+    default boolean isValidPosition(ChessPosition position) {
+        return (position.getRow() <= 8) && (position.getRow() >= 1) && (position.getColumn() <= 8) && (position.getColumn() >= 1);
+    }
 }
