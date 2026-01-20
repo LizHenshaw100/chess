@@ -25,52 +25,40 @@ public class KingMoveCalculator implements ChessInterface {
         this.col = start.getColumn();
     }
 
-    public void singleSpaceChecker(ChessBoard board, ChessPosition end, List<ChessMove> legalMoves) {
-        if (isValidPosition(end)) {
-            if (noOtherPiece(board, end)) {
-                ChessMove legalMove = new ChessMove(start, end, null);
-                legalMoves.add(legalMove);
-            } else if (!isFriendly(board, end, team)) {
-                ChessMove legalMove = new ChessMove(start, end, null);
-                legalMoves.add(legalMove);
-            }
-        }
-    }
-
     @Override
     public Collection<ChessMove> GetLegalMoves() {
         List<ChessMove> legalMoves = new ArrayList<>();
         //Check front
         ChessPosition end = new ChessPosition(row+1, col);
-        singleSpaceChecker(board, end, legalMoves);
+        singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check front right diag
         end = new ChessPosition(row+1, col+1);
-        singleSpaceChecker(board, end, legalMoves);
+        singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check right
         end = new ChessPosition(row, col+1);
-        singleSpaceChecker(board, end, legalMoves);
+        singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check back right diag
         end = new ChessPosition(row-1, col+1);
-        singleSpaceChecker(board, end, legalMoves);
+        singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check back
         end = new ChessPosition(row-1, col);
-        singleSpaceChecker(board, end, legalMoves);
+        singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check back left diag
         end = new ChessPosition(row-1, col-1);
-        singleSpaceChecker(board, end, legalMoves);
+        singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check left
         end = new ChessPosition(row, col-1);
-        singleSpaceChecker(board, end, legalMoves);
+        singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check front left diag
         end = new ChessPosition(row+1, col-1);
-        singleSpaceChecker(board, end, legalMoves);
+        singleSpaceChecker(board, end, legalMoves, start, team);
 
         return legalMoves;
     }

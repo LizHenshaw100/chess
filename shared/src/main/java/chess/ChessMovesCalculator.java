@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.Objects;
+import chess.*;
 import chess.moves.*;
 
 public class ChessMovesCalculator {
@@ -9,16 +10,18 @@ public class ChessMovesCalculator {
     private ChessGame.TeamColor team;
     private ChessBoard board;
     private ChessPosition myPosition;
+    private ChessPiece.PieceType promotionPiece;
     private ChessInterface SpecializedCalculator;
 
-    public ChessMovesCalculator(ChessPiece.PieceType type, ChessGame.TeamColor team, ChessBoard newBoard, ChessPosition newPosition) {
+    public ChessMovesCalculator(ChessPiece.PieceType type, ChessGame.TeamColor team, ChessBoard newBoard, ChessPosition newPosition, ChessPiece.PieceType promotionPiece) {
         this.type = type;
         this.team = team;
         this.board = newBoard;
         this.myPosition = newPosition;
-        //if (type == ChessPiece.PieceType.PAWN) {
-            //this.SpecializedCalculator = new
-        //}
+        this.promotionPiece = promotionPiece;
+        if (type == ChessPiece.PieceType.PAWN) {
+            this.SpecializedCalculator = new PawnMoveCalculator(board, myPosition, team, promotionPiece);
+        }
         if (type == ChessPiece.PieceType.BISHOP) {
             this.SpecializedCalculator = new BishopMoveCalculator(board, myPosition, team);
         }
@@ -30,6 +33,9 @@ public class ChessMovesCalculator {
         }
         else if (type == ChessPiece.PieceType.KING) {
             this.SpecializedCalculator = new KingMoveCalculator(board, myPosition, team);
+        }
+        else if (type == ChessPiece.PieceType.KNIGHT) {
+            this.SpecializedCalculator = new KnightMoveCalculator(board, myPosition, team);
         }
 
     }

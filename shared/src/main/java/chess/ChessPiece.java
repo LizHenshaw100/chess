@@ -57,6 +57,9 @@ public class ChessPiece {
         return type;
     }
 
+    public void setType(PieceType type) {
+        this.type = type;
+    }
 
     /**
      * Calculates all the positions a chess piece can move to
@@ -66,7 +69,8 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ChessMovesCalculator calculator = new ChessMovesCalculator(type, pieceColor, board, myPosition);
+        PieceType phonyPromotionPiece = PieceType.QUEEN;
+        ChessMovesCalculator calculator = new ChessMovesCalculator(type, pieceColor, board, myPosition, phonyPromotionPiece);
         return calculator.pieceMoves(board, myPosition);
     }
 
