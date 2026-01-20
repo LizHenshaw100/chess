@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.Objects;
+import chess.moves.*;
 
 public class ChessMovesCalculator {
     private ChessPiece.PieceType type;
@@ -22,8 +23,12 @@ public class ChessMovesCalculator {
             this.SpecializedCalculator = new BishopMoveCalculator(board, myPosition, team);
         }
         else if (type == ChessPiece.PieceType.ROOK) {
-            this.SpecializedCalculator = new BishopMoveCalculator(board, myPosition, team);
+            this.SpecializedCalculator = new RookMoveCalculator(board, myPosition, team);
         }
+        else if (type == ChessPiece.PieceType.QUEEN) {
+            this.SpecializedCalculator = new QueenMoveCalculator(board, myPosition, team);
+        }
+
     }
 
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition position) {
