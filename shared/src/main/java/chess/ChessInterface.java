@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 public interface ChessInterface {
-    Collection<ChessMove> GetLegalMoves();
+    Collection<ChessMove> getLegalMoves();
 
     default boolean noOtherPiece(ChessBoard board, ChessPosition position) {
         if (board.getPiece(position) == null) {

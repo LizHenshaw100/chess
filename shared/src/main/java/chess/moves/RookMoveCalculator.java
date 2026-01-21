@@ -26,14 +26,14 @@ public class RookMoveCalculator implements ChessInterface {
     }
 
     @Override
-    public Collection<ChessMove> GetLegalMoves() {
+    public Collection<ChessMove> getLegalMoves() {
         List<ChessMove> legalMoves = new ArrayList<>();
-        int temp_row = row;
-        int temp_col = col;
+        int tempRow = row;
+        int tempCol = col;
         //Check front
-        while (temp_row < 8) {
-            temp_row++;
-            ChessPosition end = new ChessPosition(temp_row, temp_col);
+        while (tempRow < 8) {
+            tempRow++;
+            ChessPosition end = new ChessPosition(tempRow, tempCol);
             if (noOtherPiece(board, end)) {
                 ChessMove legalMove = new ChessMove(start, end, null);
                 legalMoves.add(legalMove);
@@ -49,10 +49,10 @@ public class RookMoveCalculator implements ChessInterface {
         }
 
         //Check right
-        temp_row = row;
-        while (temp_col < 8) {
-            temp_col++;
-            ChessPosition end = new ChessPosition(temp_row, temp_col);
+        tempRow = row;
+        while (tempCol < 8) {
+            tempCol++;
+            ChessPosition end = new ChessPosition(tempRow, tempCol);
             if (noOtherPiece(board, end)) {
                 ChessMove legalMove = new ChessMove(start, end, null);
                 legalMoves.add(legalMove);
@@ -68,10 +68,10 @@ public class RookMoveCalculator implements ChessInterface {
         }
 
         //Check back
-        temp_col = col;
-        while (temp_row > 1) {
-            temp_row--;
-            ChessPosition end = new ChessPosition(temp_row, temp_col);
+        tempCol = col;
+        while (tempRow > 1) {
+            tempRow--;
+            ChessPosition end = new ChessPosition(tempRow, tempCol);
             if (noOtherPiece(board, end)) {
                 ChessMove legalMove = new ChessMove(start, end, null);
                 legalMoves.add(legalMove);
@@ -87,10 +87,10 @@ public class RookMoveCalculator implements ChessInterface {
         }
 
         //Check left
-        temp_row = row;
-        while (temp_col > 1) {
-            temp_col--;
-            ChessPosition end = new ChessPosition(temp_row, temp_col);
+        tempRow = row;
+        while (tempCol > 1) {
+            tempCol--;
+            ChessPosition end = new ChessPosition(tempRow, tempCol);
             if (noOtherPiece(board, end)) {
                 ChessMove legalMove = new ChessMove(start, end, null);
                 legalMoves.add(legalMove);

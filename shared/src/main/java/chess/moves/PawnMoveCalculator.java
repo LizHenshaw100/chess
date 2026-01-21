@@ -69,7 +69,7 @@ public class PawnMoveCalculator implements ChessInterface {
     }
 
     @Override
-    public Collection<ChessMove> GetLegalMoves() {
+    public Collection<ChessMove> getLegalMoves() {
         List<ChessMove> legalMoves = new ArrayList<>();
         ChessMove legalMove;
         ChessPosition end;

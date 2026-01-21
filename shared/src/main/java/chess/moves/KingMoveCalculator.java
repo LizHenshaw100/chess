@@ -26,7 +26,7 @@ public class KingMoveCalculator implements ChessInterface {
     }
 
     @Override
-    public Collection<ChessMove> GetLegalMoves() {
+    public Collection<ChessMove> getLegalMoves() {
         List<ChessMove> legalMoves = new ArrayList<>();
         //Check front
         ChessPosition end = new ChessPosition(row+1, col);

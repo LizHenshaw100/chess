@@ -14,19 +14,19 @@ import java.util.HashMap;
 public class ChessPiece {
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType type;
-    private Map<ChessPiece.PieceType, String> name_abbreviations;
+    private Map<ChessPiece.PieceType, String> nameAbbreviations;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
         //The abbreviations for chess pieces
-        this.name_abbreviations = new HashMap<>();
-        name_abbreviations.put(PieceType.KING, "K");
-        name_abbreviations.put(PieceType.QUEEN, "Q");
-        name_abbreviations.put(PieceType.BISHOP, "B");
-        name_abbreviations.put(PieceType.KNIGHT, "k");
-        name_abbreviations.put(PieceType.ROOK, "R");
-        name_abbreviations.put(PieceType.PAWN, "p");
+        this.nameAbbreviations = new HashMap<>();
+        nameAbbreviations.put(PieceType.KING, "K");
+        nameAbbreviations.put(PieceType.QUEEN, "Q");
+        nameAbbreviations.put(PieceType.BISHOP, "B");
+        nameAbbreviations.put(PieceType.KNIGHT, "k");
+        nameAbbreviations.put(PieceType.ROOK, "R");
+        nameAbbreviations.put(PieceType.PAWN, "p");
     }
 
     /**
@@ -76,7 +76,7 @@ public class ChessPiece {
 
     @Override
     public String toString() {
-        return name_abbreviations.get(type);
+        return nameAbbreviations.get(type);
     }
 
     @Override

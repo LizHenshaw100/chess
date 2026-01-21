@@ -27,7 +27,7 @@ public class KnightMoveCalculator implements ChessInterface {
 
 
     @Override
-    public Collection<ChessMove> GetLegalMoves() {
+    public Collection<ChessMove> getLegalMoves() {
         List<ChessMove> legalMoves = new ArrayList<>();
         //Check 1 o'clock
         ChessPosition end = new ChessPosition(row+2, col+1);

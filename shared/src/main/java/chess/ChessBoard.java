@@ -58,7 +58,7 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        ChessPiece.PieceType[] piece_order = {
+        ChessPiece.PieceType[] pieceOrder = {
                 ChessPiece.PieceType.ROOK,
                 ChessPiece.PieceType.KNIGHT,
                 ChessPiece.PieceType.BISHOP,
@@ -85,7 +85,7 @@ public class ChessBoard {
                 // white first row
                 else if (i==0) {
                     j = 0;
-                    for (ChessPiece.PieceType type : piece_order) {
+                    for (ChessPiece.PieceType type : pieceOrder) {
                         addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.WHITE, type));
                         j++;
                     }
@@ -94,7 +94,7 @@ public class ChessBoard {
                 // black first row
                 else {
                     j = 0;
-                    for (ChessPiece.PieceType type : piece_order) {
+                    for (ChessPiece.PieceType type : pieceOrder) {
                         addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.BLACK, type));
                         j++;
                     }

@@ -23,93 +23,70 @@ public class BishopMoveCalculator implements ChessInterface {
         this.col = start.getColumn();
     }
 
-    @Override
-    public Collection<ChessMove> GetLegalMoves() {
-        List<ChessMove> legalMoves = new ArrayList<>();
-        int temp_row = row;
-        int temp_col = col;
-        //Check diagonal right
-        while ((temp_row < 8) && (temp_col < 8)) {
-            temp_row++;
-            temp_col++;
-            ChessPosition end = new ChessPosition(temp_row, temp_col);
+    public boolean goThroughDiag(int tempRow, int tempCol, List<ChessMove> legalMoves, ChessPosition end) {
+            end = new ChessPosition(tempRow, tempCol);
             if (noOtherPiece(board, end)) {
                 ChessMove legalMove = new ChessMove(start, end, null);
                 legalMoves.add(legalMove);
+                return false;
             }
-            else if (isFriendly(board, end, team)) {
-                break;
-            }
-            else {
+            else if (isEnemy(board, end, team)) {
                 ChessMove legalMove = new ChessMove(start, end, null);
                 legalMoves.add(legalMove);
-                break;
+                return true;
             }
+            else {
+                return true;
             }
+        }
+
+
+    @Override
+    public Collection<ChessMove> getLegalMoves() {
+        List<ChessMove> legalMoves = new ArrayList<>();
+        ChessPosition end = null;
+        int tempRow = row;
+        int tempCol = col;
+        boolean isDone = false;
+        //Check diagonal right
+        while ((tempRow < 8) && (tempCol < 8) && !isDone) {
+            tempRow++;
+            tempCol++;
+            isDone = goThroughDiag(tempRow, tempCol, legalMoves, end);
+        }
 
         //Check diagonal left
-        temp_row = row;
-        temp_col = col;
-        while ((temp_row < 8) && (temp_col > 1)) {
-            temp_row++;
-            temp_col--;
-            ChessPosition end = new ChessPosition(temp_row, temp_col);
-            if (noOtherPiece(board, end)) {
-                ChessMove legalMove = new ChessMove(start, end, null);
-                legalMoves.add(legalMove);
-            }
-            else if (isFriendly(board, end, team)) {
-                break;
-            }
-            else {
-                ChessMove legalMove = new ChessMove(start, end, null);
-                legalMoves.add(legalMove);
-                break;
-            }
+        tempRow = row;
+        tempCol = col;
+        isDone = false;
+        while ((tempRow < 8) && (tempCol > 1) && !isDone) {
+            tempRow++;
+            tempCol--;
+            isDone = goThroughDiag(tempRow, tempCol, legalMoves, end);
         }
 
         //Check back diagonal left
-        temp_row = row;
-        temp_col = col;
-        while ((temp_row > 1) && (temp_col > 1)) {
-            temp_row--;
-            temp_col--;
-            ChessPosition end = new ChessPosition(temp_row, temp_col);
-            if (noOtherPiece(board, end)) {
-                ChessMove legalMove = new ChessMove(start, end, null);
-                legalMoves.add(legalMove);
-            }
-            else if (isFriendly(board, end, team)) {
-                break;
-            }
-            else {
-                ChessMove legalMove = new ChessMove(start, end, null);
-                legalMoves.add(legalMove);
-                break;
-            }
+        tempRow = row;
+        tempCol = col;
+        isDone = false;
+        while ((tempRow > 1) && (tempCol > 1) && !isDone) {
+            tempRow--;
+            tempCol--;
+            isDone = goThroughDiag(tempRow, tempCol, legalMoves, end);
         }
 
         //Check back diagonal right
-        temp_row = row;
-        temp_col = col;
-        while ((temp_row > 1) && (temp_col < 8)) {
-            temp_row--;
-            temp_col++;
-            ChessPosition end = new ChessPosition(temp_row, temp_col);
-            if (noOtherPiece(board, end)) {
-                ChessMove legalMove = new ChessMove(start, end, null);
-                legalMoves.add(legalMove);
-            }
-            else if (isFriendly(board, end, team)) {
-                break;
-            }
-            else {
-                ChessMove legalMove = new ChessMove(start, end, null);
-                legalMoves.add(legalMove);
-                break;
-            }
+        tempRow = row;
+        tempCol = col;
+        isDone = false;
+        while ((tempRow > 1) && (tempCol < 8) && !isDone) {
+            tempRow--;
+            tempCol++;
+            isDone = goThroughDiag(tempRow, tempCol, legalMoves, end);
         }
 
         return legalMoves;
     }
+
+
 }
