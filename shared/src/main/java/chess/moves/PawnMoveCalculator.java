@@ -26,35 +26,22 @@ public class PawnMoveCalculator implements ChessInterface {
         this.col = start.getColumn();
     }
 
-    public void CheckForWhitePromotion(int row, ChessPosition end, Collection<ChessMove> legalMoves) {
+    public void checkForPromotion(int row, ChessPosition end, Collection<ChessMove> legalMoves, ChessGame.TeamColor team) {
         ChessMove legalMove;
         ArrayList<ChessPiece.PieceType> pieceList = new ArrayList<>();
         pieceList.add(KNIGHT);
         pieceList.add(QUEEN);
         pieceList.add(BISHOP);
         pieceList.add(ROOK);
-        if (row + 1 < 8) {
-            legalMove = new ChessMove(start, end, null);
-            legalMoves.add(legalMove);
+        int rowForPromo;
+        if (team == ChessGame.TeamColor.WHITE) {
+            rowForPromo = 7;
         }
         else {
-            ChessPiece.PieceType promoPiece;
-            for (int i=0; i<pieceList.size(); i++) {
-                promoPiece = pieceList.get(i);
-                legalMove = new ChessMove(start, end, promoPiece);
-                legalMoves.add(legalMove);
-            }
+            rowForPromo = 2;
         }
-    }
 
-    public void CheckForBlackPromotion(int row, ChessPosition end, Collection<ChessMove> legalMoves) {
-        ChessMove legalMove;
-        ArrayList<ChessPiece.PieceType> pieceList = new ArrayList<>();
-        pieceList.add(KNIGHT);
-        pieceList.add(QUEEN);
-        pieceList.add(BISHOP);
-        pieceList.add(ROOK);
-        if (row - 1 > 1) {
+        if (row != rowForPromo) {
             legalMove = new ChessMove(start, end, null);
             legalMoves.add(legalMove);
         }
@@ -78,11 +65,11 @@ public class PawnMoveCalculator implements ChessInterface {
             //Check move forward 1
             end = new ChessPosition(row + 1, col);
             if (isValidPosition(end) && (noOtherPiece(board, end))) {
-                CheckForWhitePromotion(row, end, legalMoves);
+                checkForPromotion(row, end, legalMoves, team);
                 //Check move forward 2
                 end = new ChessPosition(row + 2, col);
                 if (row == 2 && isValidPosition(end) && (noOtherPiece(board, end))) {
-                    CheckForWhitePromotion(row, end, legalMoves);
+                    checkForPromotion(row, end, legalMoves, team);
                 }
 
             }
@@ -91,13 +78,13 @@ public class PawnMoveCalculator implements ChessInterface {
             //Check left diag take piece
             end = new ChessPosition(row + 1, col - 1);
             if ((isValidPosition(end)) && (isEnemy(board, end, team))) {
-                CheckForWhitePromotion(row, end, legalMoves);
+                checkForPromotion(row, end, legalMoves, team);
             }
 
             //Check right diag take piece
             end = new ChessPosition(row + 1, col + 1);
             if ((isValidPosition(end)) && (isEnemy(board, end, team))) {
-                CheckForWhitePromotion(row, end, legalMoves);
+                checkForPromotion(row, end, legalMoves, team);
             }
         }
 
@@ -106,11 +93,11 @@ public class PawnMoveCalculator implements ChessInterface {
             //Check move forward 1
             end = new ChessPosition(row - 1, col);
             if (isValidPosition(end) && (noOtherPiece(board, end))) {
-                CheckForBlackPromotion(row, end, legalMoves);
+                checkForPromotion(row, end, legalMoves, team);
                 //Check move forward 2
                 end = new ChessPosition(row - 2, col);
                 if (row == 7 && isValidPosition(end) && (noOtherPiece(board, end))) {
-                    CheckForBlackPromotion(row, end, legalMoves);
+                    checkForPromotion(row, end, legalMoves, team);
                 }
 
             }
@@ -119,13 +106,13 @@ public class PawnMoveCalculator implements ChessInterface {
             //Check left diag take piece
             end = new ChessPosition(row - 1, col - 1);
             if ((isValidPosition(end)) && (isEnemy(board, end, team))) {
-                CheckForBlackPromotion(row, end, legalMoves);
+                checkForPromotion(row, end, legalMoves, team);
             }
 
             //Check right diag take piece
             end = new ChessPosition(row - 1, col + 1);
             if ((isValidPosition(end)) && (isEnemy(board, end, team))) {
-                CheckForBlackPromotion(row, end, legalMoves);
+                checkForPromotion(row, end, legalMoves, team);
             }
         }
 

@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Objects;
 import chess.*;
 import chess.moves.*;
+import chess.ChessPiece.PieceType;
+import chess.ChessGame.TeamColor;
 
 public class ChessMovesCalculator {
     private ChessPiece.PieceType type;
@@ -13,7 +15,7 @@ public class ChessMovesCalculator {
     private ChessPiece.PieceType promotionPiece;
     private ChessInterface specializedCalculator;
 
-    public ChessMovesCalculator(ChessPiece.PieceType type, ChessGame.TeamColor team, ChessBoard newBoard, ChessPosition newPosition, ChessPiece.PieceType promotionPiece) {
+    public ChessMovesCalculator(PieceType type, TeamColor team, ChessBoard newBoard, ChessPosition newPosition, PieceType promotionPiece) {
         this.type = type;
         this.team = team;
         this.board = newBoard;
