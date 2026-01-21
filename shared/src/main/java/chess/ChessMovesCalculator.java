@@ -24,7 +24,7 @@ public class ChessMovesCalculator {
         if (type == ChessPiece.PieceType.PAWN) {
             this.specializedCalculator = new PawnMoveCalculator(board, myPosition, team, promotionPiece);
         }
-        if (type == ChessPiece.PieceType.BISHOP) {
+        else if (type == ChessPiece.PieceType.BISHOP) {
             this.specializedCalculator = new BishopMoveCalculator(board, myPosition, team);
         }
         else if (type == ChessPiece.PieceType.ROOK) {
@@ -36,7 +36,7 @@ public class ChessMovesCalculator {
         else if (type == ChessPiece.PieceType.KING) {
             this.specializedCalculator = new KingMoveCalculator(board, myPosition, team);
         }
-        else if (type == ChessPiece.PieceType.KNIGHT) {
+        else {
             this.specializedCalculator = new KnightMoveCalculator(board, myPosition, team);
         }
 
