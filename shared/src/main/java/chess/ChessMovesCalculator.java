@@ -2,7 +2,6 @@ package chess;
 
 import java.util.Collection;
 import java.util.Objects;
-import chess.*;
 import chess.moves.*;
 import chess.ChessPiece.PieceType;
 import chess.ChessGame.TeamColor;

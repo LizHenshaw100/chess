@@ -17,6 +17,7 @@ public class ChessGame {
     public ChessGame() {
         this.turn = TeamColor.WHITE;
         this.board = new ChessBoard();
+        board.resetBoard();
     }
 
     public ChessGame(ChessGame oldGame) {
@@ -89,14 +90,25 @@ public class ChessGame {
         if (piece == null) {
             throw new InvalidMoveException();
         }
-        TeamColor team = piece.getTeamColor();
-        ArrayList<ChessMove> moveList = (ArrayList<ChessMove>) piece.pieceMoves(board, start);
-        for (int i=0; i<moveList.size(); i++) {
-            if (moveList.get(i).equals(end)) {
+
+        HashSet<ChessMove> moveList = (HashSet<ChessMove>) piece.pieceMoves(board, start);
+
+        Iterator<ChessMove> it = moveList.iterator();
+        while (it.hasNext()) {
+            ChessMove currentMove = it.next();
+            if (currentMove.getEndPosition().equals(end)) {
                 if (board.getPiece(end) != null) {
                     board.removePiece(end);
                 }
-                board.addPiece(end, piece);
+                PieceType promoPieceType = move.getPromotionPiece();
+                if (promoPieceType!= null) {
+                    board.addPiece(end, piece);
+                }
+                else {
+                    TeamColor team = piece.getTeamColor();
+                    ChessPiece promoPiece = new ChessPiece(team, promoPieceType);
+                    board.addPiece(end, promoPiece);
+                }
                 return;
             }
         }
@@ -204,6 +216,4 @@ public class ChessGame {
     public int hashCode() {
         return Objects.hash(board, turn);
     }
-
-
 }

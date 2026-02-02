@@ -30,24 +30,6 @@ public class ChessBoard {
         setBoard(chessBoard);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ChessBoard that = (ChessBoard) o;
-        return Objects.deepEquals(board, that.board);
-    }
-
-    @Override
-    public int hashCode() {
-        return Arrays.deepHashCode(board);
-    }
-
-    public ChessPiece[][] getBoard() {
-        return board;
-    }
-
     /**
      * Adds a chess piece to the chessboard
      *
@@ -56,6 +38,14 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         board[Math.abs(position.getRow()-8)][position.getColumn()-1] = piece;
+        if (piece != null){
+            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                whitePieces.put(position, piece);
+            }
+            else {
+                blackPieces.put(position, piece);
+            }
+        }
     }
 
     public void removePiece(ChessPosition position) {
@@ -102,6 +92,8 @@ public class ChessBoard {
         board = board;
         ChessPosition position;
         ChessPiece piece;
+        whitePieces = new HashMap<>();
+        blackPieces = new HashMap<>();
         for (int i=1; i<9; i++) {
             for (int j=1; j<9; j++) {
                 position = new ChessPosition(i, j);
@@ -142,14 +134,12 @@ public class ChessBoard {
                     piece = new ChessPiece(WHITE, ChessPiece.PieceType.PAWN);
                     position = new ChessPosition(i+1, j+1);
                     addPiece(position, piece);
-                    whitePieces.put(position, piece);
                 }
                 // black pawns
                 else if (i==6) {
                     piece = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
                     position = new ChessPosition(i+1, j+1);
                     addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
-                    blackPieces.put(position, piece);
                 }
                 // null space
                 else if ((i > 1) && (i < 6)) {
@@ -162,7 +152,6 @@ public class ChessBoard {
                         position = new ChessPosition(i+1, j+1);
                         piece = new ChessPiece(WHITE, type);
                         addPiece(position, piece);
-                        whitePieces.put(position, piece);
                         j++;
                     }
                     break;
@@ -174,7 +163,6 @@ public class ChessBoard {
                         position = new ChessPosition(i+1, j+1);
                         piece = new ChessPiece(ChessGame.TeamColor.BLACK, type);
                         addPiece(position, piece);
-                        blackPieces.put(position, piece);
                         j++;
                     }
                     break;
@@ -200,5 +188,19 @@ public class ChessBoard {
             chessboard = chessboard + "\n";
         }
         return chessboard;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessBoard that = (ChessBoard) o;
+        return Objects.deepEquals(board, that.board) && Objects.equals(whiteKing, that.whiteKing) && Objects.equals(blackKing, that.blackKing) && Objects.equals(whitePieces, that.whitePieces) && Objects.equals(blackPieces, that.blackPieces);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Arrays.deepHashCode(board), whitePieces, blackPieces, whiteKing, blackKing);
     }
 }
