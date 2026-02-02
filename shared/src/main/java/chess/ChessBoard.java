@@ -3,6 +3,9 @@ package chess;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.HashMap;
+
+import static chess.ChessGame.TeamColor.WHITE;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -11,12 +14,21 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    public ChessPiece[][] board = new ChessPiece[8][8];
+    public ChessPiece[][] board;
+    HashMap<ChessPosition, ChessPiece> whitePieces;
+    HashMap<ChessPosition, ChessPiece> blackPieces;
+    ChessPosition whiteKing;
+    ChessPosition blackKing;
 
     public ChessBoard() {
         board = new ChessPiece[8][8];
+        whitePieces = new HashMap<>();
+        blackPieces = new HashMap<>();
     }
 
+    public ChessBoard(ChessBoard chessBoard) {
+        setBoard(chessBoard);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -32,6 +44,10 @@ public class ChessBoard {
         return Arrays.deepHashCode(board);
     }
 
+    public ChessPiece[][] getBoard() {
+        return board;
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -40,6 +56,18 @@ public class ChessBoard {
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
         board[Math.abs(position.getRow()-8)][position.getColumn()-1] = piece;
+    }
+
+    public void removePiece(ChessPosition position) {
+        ChessPiece piece = getPiece(position);
+        ChessGame.TeamColor color = piece.getTeamColor();
+        board[Math.abs(position.getRow()-8)][position.getColumn()-1] = null;
+        if (color==WHITE) {
+            whitePieces.remove(position);
+        }
+        else {
+            blackPieces.remove(position);
+        }
     }
 
     /**
@@ -51,6 +79,43 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return board[Math.abs(position.getRow()-8)][position.getColumn()-1];
+    }
+
+    public HashMap<ChessPosition, ChessPiece> getBlackPieces() {
+        return blackPieces;
+    }
+
+    public HashMap getWhitePieces() {
+        return whitePieces;
+    }
+
+    public HashMap getPieces(ChessGame.TeamColor color) {
+        if (color == WHITE) {
+            return whitePieces;
+        }
+        else {
+            return blackPieces;
+        }
+    }
+
+    public void setBoard(ChessBoard board) {
+        board = board;
+        ChessPosition position;
+        ChessPiece piece;
+        for (int i=1; i<9; i++) {
+            for (int j=1; j<9; j++) {
+                position = new ChessPosition(i, j);
+                piece = board.getPiece(position);
+                if (piece != null) {
+                    if (piece.getTeamColor() == WHITE) {
+                        whitePieces.put(position, piece);
+                    }
+                    else {
+                        blackPieces.put(position, piece);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -68,15 +133,23 @@ public class ChessBoard {
                 ChessPiece.PieceType.KNIGHT,
                 ChessPiece.PieceType.ROOK
         };
+        ChessPiece piece;
+        ChessPosition position;
         for (int i=0; i<8; i++) {
             for (int j=0; j<8; j++) {
                 // white pawns
                 if (i==1) {
-                    addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN));
+                    piece = new ChessPiece(WHITE, ChessPiece.PieceType.PAWN);
+                    position = new ChessPosition(i+1, j+1);
+                    addPiece(position, piece);
+                    whitePieces.put(position, piece);
                 }
                 // black pawns
                 else if (i==6) {
+                    piece = new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+                    position = new ChessPosition(i+1, j+1);
                     addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.PAWN));
+                    blackPieces.put(position, piece);
                 }
                 // null space
                 else if ((i > 1) && (i < 6)) {
@@ -86,7 +159,10 @@ public class ChessBoard {
                 else if (i==0) {
                     j = 0;
                     for (ChessPiece.PieceType type : pieceOrder) {
-                        addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.WHITE, type));
+                        position = new ChessPosition(i+1, j+1);
+                        piece = new ChessPiece(WHITE, type);
+                        addPiece(position, piece);
+                        whitePieces.put(position, piece);
                         j++;
                     }
                     break;
@@ -95,7 +171,10 @@ public class ChessBoard {
                 else {
                     j = 0;
                     for (ChessPiece.PieceType type : pieceOrder) {
-                        addPiece(new ChessPosition(i+1, j+1), new ChessPiece(ChessGame.TeamColor.BLACK, type));
+                        position = new ChessPosition(i+1, j+1);
+                        piece = new ChessPiece(ChessGame.TeamColor.BLACK, type);
+                        addPiece(position, piece);
+                        blackPieces.put(position, piece);
                         j++;
                     }
                     break;

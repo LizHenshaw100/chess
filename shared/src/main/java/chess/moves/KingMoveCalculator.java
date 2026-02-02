@@ -3,9 +3,9 @@ package chess.moves;
 import chess.*;
 import chess.ChessInterface;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Collection;
-import java.util.List;
+
 
 
 
@@ -27,7 +27,7 @@ public class KingMoveCalculator implements ChessInterface {
 
     @Override
     public Collection<ChessMove> getLegalMoves() {
-        List<ChessMove> legalMoves = new ArrayList<>();
+        HashSet<ChessMove> legalMoves = new HashSet<>();
         //Check front
         ChessPosition end = new ChessPosition(row+1, col);
         singleSpaceChecker(board, end, legalMoves, start, team);

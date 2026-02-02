@@ -25,7 +25,7 @@ public class QueenMoveCalculator implements ChessInterface{
 
     @Override
     public Collection<ChessMove> getLegalMoves() {
-        List<ChessMove> legalMoves = new ArrayList<>();
+        HashSet<ChessMove> legalMoves = new HashSet<>();
         legalMoves.addAll(bishopMoves.getLegalMoves());
         legalMoves.addAll(rookMoves.getLegalMoves());
         return legalMoves;

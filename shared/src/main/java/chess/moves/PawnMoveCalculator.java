@@ -5,7 +5,7 @@ import chess.ChessInterface;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 
 import static chess.ChessPiece.PieceType.*;
 
@@ -14,11 +14,10 @@ public class PawnMoveCalculator implements ChessInterface {
     private ChessBoard board;
     private ChessPosition start;
     private ChessGame.TeamColor team;
-    private ChessPiece.PieceType promotionPiece;
     private int row;
     private int col;
 
-    public PawnMoveCalculator(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor team, ChessPiece.PieceType promotionPiece) {
+    public PawnMoveCalculator(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor team) {
         this.board = board;
         this.start = myPosition;
         this.team = team;
@@ -57,7 +56,7 @@ public class PawnMoveCalculator implements ChessInterface {
 
     @Override
     public Collection<ChessMove> getLegalMoves() {
-        List<ChessMove> legalMoves = new ArrayList<>();
+        HashSet<ChessMove> legalMoves = new HashSet<>();
         ChessMove legalMove;
         ChessPosition end;
         //Check forward moves for white

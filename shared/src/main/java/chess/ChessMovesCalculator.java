@@ -15,14 +15,14 @@ public class ChessMovesCalculator {
     private ChessPiece.PieceType promotionPiece;
     private ChessInterface specializedCalculator;
 
-    public ChessMovesCalculator(PieceType type, TeamColor team, ChessBoard newBoard, ChessPosition newPosition, PieceType promotionPiece) {
+    public ChessMovesCalculator(PieceType type, TeamColor team, ChessBoard newBoard, ChessPosition newPosition) {
         this.type = type;
         this.team = team;
         this.board = newBoard;
         this.myPosition = newPosition;
-        this.promotionPiece = promotionPiece;
+
         if (type == ChessPiece.PieceType.PAWN) {
-            this.specializedCalculator = new PawnMoveCalculator(board, myPosition, team, promotionPiece);
+            this.specializedCalculator = new PawnMoveCalculator(board, myPosition, team);
         }
         else if (type == ChessPiece.PieceType.BISHOP) {
             this.specializedCalculator = new BishopMoveCalculator(board, myPosition, team);

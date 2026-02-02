@@ -2,9 +2,9 @@ package chess.moves;
 
 import chess.*;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Collection;
-import java.util.List;
+
 
 public class BishopMoveCalculator implements ChessInterface {
     private ChessBoard board;
@@ -23,7 +23,7 @@ public class BishopMoveCalculator implements ChessInterface {
         this.col = start.getColumn();
     }
 
-    public boolean goThroughDiag(int tempRow, int tempCol, List<ChessMove> legalMoves, ChessPosition end) {
+    public boolean goThroughDiag(int tempRow, int tempCol, HashSet<ChessMove> legalMoves, ChessPosition end) {
             end = new ChessPosition(tempRow, tempCol);
             if (noOtherPiece(board, end)) {
                 ChessMove legalMove = new ChessMove(start, end, null);
@@ -43,7 +43,7 @@ public class BishopMoveCalculator implements ChessInterface {
 
     @Override
     public Collection<ChessMove> getLegalMoves() {
-        List<ChessMove> legalMoves = new ArrayList<>();
+        HashSet<ChessMove> legalMoves = new HashSet<>();
         ChessPosition end = null;
         int tempRow = row;
         int tempCol = col;

@@ -69,8 +69,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        PieceType phonyPromotionPiece = PieceType.QUEEN;
-        ChessMovesCalculator calculator = new ChessMovesCalculator(type, pieceColor, board, myPosition, phonyPromotionPiece);
+        ChessMovesCalculator calculator = new ChessMovesCalculator(type, pieceColor, board, myPosition);
         return calculator.pieceMoves(board, myPosition);
     }
 

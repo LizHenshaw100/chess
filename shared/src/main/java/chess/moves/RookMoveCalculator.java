@@ -3,9 +3,9 @@ package chess.moves;
 import chess.*;
 import chess.ChessInterface;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Collection;
-import java.util.List;
+
 
 
 
@@ -27,7 +27,7 @@ public class RookMoveCalculator implements ChessInterface {
 
     @Override
     public Collection<ChessMove> getLegalMoves() {
-        List<ChessMove> legalMoves = new ArrayList<>();
+        HashSet<ChessMove> legalMoves = new HashSet<>();
         int tempRow = row;
         int tempCol = col;
         //Check front
