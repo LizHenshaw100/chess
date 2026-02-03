@@ -92,6 +92,10 @@ public class ChessGame {
         }
         TeamColor color = piece.getTeamColor();
 
+        if (!isTurn(color)) {
+            throw new InvalidMoveException();
+        }
+
         HashSet<ChessMove> moveList = (HashSet<ChessMove>) piece.pieceMoves(board, start);
 
         Iterator<ChessMove> it = moveList.iterator();
@@ -193,6 +197,15 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         throw new RuntimeException("Not implemented");
+    }
+
+    public boolean isTurn(TeamColor color) {
+        if (color == getTeamTurn()) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
