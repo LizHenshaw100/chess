@@ -109,7 +109,9 @@ public class ChessGame {
                 }
                 PieceType promoPieceType = move.getPromotionPiece();
                 if (promoPieceType!= null) {
-                    board.addPiece(end, piece);
+                    ChessPiece promoPiece = new ChessPiece(color, promoPieceType);
+                    board.addPiece(end, promoPiece);
+                    board.removePiece(start);
                 }
                 else {
                     TeamColor team = piece.getTeamColor();
