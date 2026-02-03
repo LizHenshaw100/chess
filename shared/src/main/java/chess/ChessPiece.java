@@ -29,6 +29,11 @@ public class ChessPiece {
         nameAbbreviations.put(PieceType.PAWN, "p");
     }
 
+    public ChessPiece(ChessPiece piece) {
+        this.pieceColor = piece.getTeamColor();
+        this.type = piece.getPieceType();
+    }
+
     /**
      * The various different chess piece options
      */

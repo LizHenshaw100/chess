@@ -26,9 +26,29 @@ public class ChessBoard {
         blackPieces = new HashMap<>();
     }
 
-    public ChessBoard(ChessBoard chessBoard) {
-        setBoard(chessBoard);
+    public ChessBoard(ChessBoard oldBoard) {
+        board = new ChessPiece[8][8];
+        whitePieces = new HashMap<>();
+        blackPieces = new HashMap<>();
+
+        for (int i=1; i<9; i++) {
+            for (int j=1; j<9; j++) {
+                ChessPosition position = new ChessPosition(i, j);
+                ChessPiece oldPiece = oldBoard.getPiece(position);
+                if (oldPiece != null) {
+                    ChessPiece pieceCopy = new ChessPiece(oldPiece);
+                    addPiece(position, pieceCopy);
+                    if (oldPiece.getTeamColor() == WHITE) {
+                        whitePieces.put(position, oldPiece);
+                    }
+                    else {
+                        blackPieces.put(position, oldPiece);
+                    }
+                }
+            }
+        }
     }
+
 
     /**
      * Adds a chess piece to the chessboard
@@ -88,8 +108,12 @@ public class ChessBoard {
         }
     }
 
-    public void setBoard(ChessBoard board) {
-        board = board;
+    public ChessPiece[][] getBoard(){
+        return this.board;
+    }
+
+    public void setBoard(ChessBoard newBoard) {
+        board = newBoard.getBoard();
         ChessPosition position;
         ChessPiece piece;
         whitePieces = new HashMap<>();
@@ -97,7 +121,7 @@ public class ChessBoard {
         for (int i=1; i<9; i++) {
             for (int j=1; j<9; j++) {
                 position = new ChessPosition(i, j);
-                piece = board.getPiece(position);
+                piece = getPiece(position);
                 if (piece != null) {
                     if (piece.getTeamColor() == WHITE) {
                         whitePieces.put(position, piece);

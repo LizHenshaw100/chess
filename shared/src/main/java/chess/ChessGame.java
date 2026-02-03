@@ -60,10 +60,10 @@ public class ChessGame {
         ChessPiece piece;
         TeamColor team;
         piece = board.getPiece(startPosition);
-        team = piece.getTeamColor();
         if (piece == null) {
             return null;
         }
+        team = piece.getTeamColor();
         Collection<ChessMove> moves = piece.pieceMoves(board, startPosition);
         Collection<ChessMove> validMoves = null;
         ChessGame testGame;
@@ -90,6 +90,7 @@ public class ChessGame {
         if (piece == null) {
             throw new InvalidMoveException();
         }
+        TeamColor color = piece.getTeamColor();
 
         HashSet<ChessMove> moveList = (HashSet<ChessMove>) piece.pieceMoves(board, start);
 
@@ -97,6 +98,12 @@ public class ChessGame {
         while (it.hasNext()) {
             ChessMove currentMove = it.next();
             if (currentMove.getEndPosition().equals(end)) {
+                ChessGame testGame = new ChessGame(this);
+                testGame.makeTestMove(move);
+                if (testGame.isInCheck(color)) {
+                    throw new InvalidMoveException();
+                }
+
                 if (board.getPiece(end) != null) {
                     board.removePiece(end);
                 }
@@ -109,6 +116,7 @@ public class ChessGame {
                     ChessPiece promoPiece = new ChessPiece(team, promoPieceType);
                     board.addPiece(end, promoPiece);
                 }
+                swapTeamTurn();
                 return;
             }
         }
@@ -192,6 +200,15 @@ public class ChessGame {
      */
     public void setBoard(ChessBoard board) {
         this.board.setBoard(board);
+    }
+
+    public void swapTeamTurn() {
+        if (turn == TeamColor.WHITE) {
+            turn = TeamColor.BLACK;
+        }
+        else {
+            turn = TeamColor.WHITE;
+        }
     }
 
     /**
