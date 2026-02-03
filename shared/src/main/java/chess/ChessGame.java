@@ -115,8 +115,8 @@ public class ChessGame {
                 }
                 else {
                     TeamColor team = piece.getTeamColor();
-                    ChessPiece promoPiece = new ChessPiece(team, promoPieceType);
-                    board.addPiece(end, promoPiece);
+                    board.addPiece(end, piece);
+                    board.removePiece(start);
                 }
                 swapTeamTurn();
                 return;
