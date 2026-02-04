@@ -14,11 +14,14 @@ import java.util.HashMap;
 public class ChessPiece {
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType type;
+    private static int moveCount;
     private Map<ChessPiece.PieceType, String> nameAbbreviations;
+
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
+        this.moveCount = 0;
         //The abbreviations for chess pieces
         this.nameAbbreviations = new HashMap<>();
         nameAbbreviations.put(PieceType.KING, "K");
@@ -60,6 +63,14 @@ public class ChessPiece {
      */
     public PieceType getPieceType() {
         return type;
+    }
+
+    public static void move() {
+        moveCount += 1;
+    }
+
+    public int getMoveCount() {
+        return moveCount;
     }
 
     public void setType(PieceType type) {

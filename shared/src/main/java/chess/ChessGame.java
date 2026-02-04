@@ -4,6 +4,9 @@ import java.util.*;
 
 import chess.ChessPiece.PieceType;
 
+import static chess.ChessPiece.PieceType.*;
+import static java.lang.Math.abs;
+
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -65,7 +68,7 @@ public class ChessGame {
         }
         team = piece.getTeamColor();
         Collection<ChessMove> moves = piece.pieceMoves(board, startPosition);
-        Collection<ChessMove> validMoves = null;
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
         ChessGame testGame;
         for (ChessMove move : moves) {
             testGame = new ChessGame(this);
@@ -75,6 +78,15 @@ public class ChessGame {
             }
         }
         return validMoves;
+    }
+
+    public boolean testMove(ChessMove move, TeamColor color) {
+        ChessGame testGame = new ChessGame(this);
+        testGame.makeTestMove(move);
+        if (testGame.isInCheck(color)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -102,12 +114,10 @@ public class ChessGame {
         while (it.hasNext()) {
             ChessMove currentMove = it.next();
             if (currentMove.getEndPosition().equals(end)) {
-                ChessGame testGame = new ChessGame(this);
-                testGame.makeTestMove(move);
-                if (testGame.isInCheck(color)) {
+                //Test Move
+                if (!testMove(move, color)) {
                     throw new InvalidMoveException();
                 }
-
                 if (board.getPiece(end) != null) {
                     board.removePiece(end);
                 }
@@ -119,6 +129,7 @@ public class ChessGame {
                 }
                 else {
                     TeamColor team = piece.getTeamColor();
+                    piece.move();
                     board.addPiece(end, piece);
                     board.removePiece(start);
                 }
@@ -132,8 +143,18 @@ public class ChessGame {
     public void makeTestMove(ChessMove move) {
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
-        ChessPiece piece = board.getPiece(start);
+        ChessPiece piece;
+        ChessPiece.move();
+        if (move.getPromotionPiece() == null) {
+            piece = board.getPiece(start);
+        }
+        else {
+            piece = new ChessPiece(board.getPiece(start).getTeamColor(), move.getPromotionPiece());
+        }
         board.removePiece(start);
+        if (board.getPiece(end) != null) {
+            board.removePiece(end);
+        }
         board.addPiece(end, piece);
     }
 
@@ -144,8 +165,29 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        if (myIsInCheck(teamColor) == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public ChessPosition findKingPosition(HashMap<ChessPosition, ChessPiece> myPieces) {
+        for (HashMap.Entry<ChessPosition, ChessPiece> entry : myPieces.entrySet()) {
+            ChessPosition start = entry.getKey();
+            ChessPiece piece = entry.getValue();
+            if (piece.getPieceType().equals(PieceType.KING)) {
+                return start;
+            }
+        }
+        return null;
+    }
+
+
+    public ChessPosition myIsInCheck(TeamColor teamColor) {
         Collection<ChessMove> moveSet;
-        ChessPosition kingPosition = null;
+        ChessPosition kingPosition;
         TeamColor opponent;
         if (teamColor == TeamColor.WHITE) {
             opponent = TeamColor.BLACK;
@@ -157,27 +199,22 @@ public class ChessGame {
         opponentPieces = board.getPieces(opponent);
         myPieces = board.getPieces(teamColor);
 
-        for (HashMap.Entry<ChessPosition, ChessPiece> entry : myPieces.entrySet()) {
-            ChessPosition start = entry.getKey();
-            ChessPiece piece = entry.getValue();
-            if (piece.getPieceType().equals(PieceType.KING)) {
-                kingPosition = start;
-                break;
-            }
-        }
+        //Find kingPosition
+
+        kingPosition = findKingPosition(myPieces);
+
         for (HashMap.Entry<ChessPosition, ChessPiece> entry : opponentPieces.entrySet()) {
             ChessPosition start = entry.getKey();
             ChessPiece piece = entry.getValue();
             moveSet = piece.pieceMoves(board, start);
             for (ChessMove move : moveSet) {
                 if (move.getEndPosition().equals(kingPosition)) {
-                    return true;
+                    return start;
                 }
             }
         }
-        return false;
+        return null;
     }
-
     /**
      * Determines if the given team is in checkmate
      *
@@ -185,7 +222,96 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ChessPosition attackerPos;
+        attackerPos = myIsInCheck(teamColor);
+        if (attackerPos == null) {
+            return false;
+        }
+        HashMap<ChessPosition, ChessPiece> myPieces = board.getPieces(teamColor);
+
+        //Check King Moves
+        ChessPosition kingPosition = findKingPosition(myPieces);
+        ChessPiece king = board.getPiece(kingPosition);
+        Collection<ChessMove> kingMoves = king.pieceMoves(board, kingPosition);
+        for (ChessMove move : kingMoves) {
+            if (testMove(move, teamColor)) {
+                return false;
+            }
+        }
+        //Get list of interception positions
+        ArrayList<ChessPosition> interceptions = new ArrayList<>();
+        ChessPosition interception;
+        int row;
+        int tempRow;
+        int col;
+        int tempCol;
+        int bumpVal;
+        int bumpVal2;
+        int kingRow;
+        int kingCol;
+        ChessPiece attacker = board.getPiece(attackerPos);
+        PieceType attackerType = attacker.getPieceType();
+        // add attacker position to list of possible interceptions
+        interceptions.add(attackerPos);
+        if (attackerType == QUEEN || attackerType == ROOK) {
+            row = kingPosition.getRow();
+            col = kingPosition.getColumn();
+            if (attackerPos.getRow() == kingPosition.getRow()) {
+                tempCol = attackerPos.getColumn();
+                bumpVal = ((col - tempCol) * -1);
+                bumpVal = (bumpVal > 0) ? -1 : 1;
+                while (tempCol+1 != col) {
+                    tempCol+= bumpVal;
+                    interception = new ChessPosition(row, tempCol);
+                    interceptions.add(interception);
+                }
+            }
+            if (attackerPos.getColumn() == kingPosition.getColumn()) {
+                tempRow = attackerPos.getRow();
+                bumpVal = ((row - tempRow) * -1);
+                bumpVal = (bumpVal > 0) ? -1 : 1;
+                while (tempRow+1 != row) {
+                    tempRow+= bumpVal;
+                    interception = new ChessPosition(tempRow, col);
+                    interceptions.add(interception);
+                }
+            }
+        }
+        if (attackerType == QUEEN || attackerType == BISHOP) {
+            row = attackerPos.getRow();
+            col = attackerPos.getColumn();
+            kingRow = kingPosition.getRow();
+            kingCol = kingPosition.getColumn();
+            int drow = (row - kingRow);
+            int dcol = (col - kingCol);
+            if (abs(dcol) == abs(drow)) {
+                bumpVal = Integer.signum(drow) * -1;
+                bumpVal2 = Integer.signum(dcol) * -1;
+
+                while(row != kingRow) {
+                    row += bumpVal;
+                    col += bumpVal;
+                    interception = new ChessPosition(row, col);
+                    interceptions.add(interception);
+                }
+            }
+        }
+
+        //Check my Moves
+        Collection<ChessMove> moveSet;
+        for (HashMap.Entry<ChessPosition, ChessPiece> entry : myPieces.entrySet()) {
+            ChessPosition start = entry.getKey();
+            ChessPiece piece = entry.getValue();
+            moveSet = piece.pieceMoves(board, start);
+            for (ChessMove move : moveSet) {
+                if (interceptions.contains(move.getEndPosition())) {
+                    if (testMove(move, teamColor)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -196,7 +322,21 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (isInCheck(teamColor)) {
+            return false;
+        }
+        HashMap<ChessPosition, ChessPiece> myPieces;
+        Collection<ChessMove> moveSet;
+        myPieces = board.getPieces(teamColor);
+        for (HashMap.Entry<ChessPosition, ChessPiece> entry : myPieces.entrySet()) {
+            ChessPosition start = entry.getKey();
+            ChessPiece piece = entry.getValue();
+            moveSet = validMoves(start);
+            if (moveSet.size() != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isTurn(TeamColor color) {

@@ -192,6 +192,27 @@ public class GameStatusTests {
         Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.WHITE), INCORRECT_WHITE_CHECKMATE);
     }
 
+    @Test
+    @DisplayName("My Test")
+    public void checkmateWhereAttackerComesFromRow() {
+
+        var game = new ChessGame();
+        game.setBoard(TestUtilities.loadBoard("""
+                | | | | |R| | |k|
+                | | |R| | | | |r|
+                | | | | | | | | |
+                | | | | |r| | | |
+                | | | | | | | | |
+                | | |B| | | | | |
+                | | | | | | | | |
+                |K| | | | | | | |
+                """));
+        game.setTeamTurn(ChessGame.TeamColor.BLACK);
+
+        Assertions.assertTrue(game.isInCheckmate(ChessGame.TeamColor.BLACK), MISSING_BLACK_CHECKMATE);
+        Assertions.assertFalse(game.isInCheckmate(ChessGame.TeamColor.WHITE), INCORRECT_WHITE_CHECKMATE);
+    }
+
 
     @Test
     @DisplayName("Pinned King Causes Stalemate")
