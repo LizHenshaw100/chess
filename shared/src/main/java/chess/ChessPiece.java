@@ -14,7 +14,8 @@ import java.util.HashMap;
 public class ChessPiece {
     private ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType type;
-    private static int moveCount;
+    public int moveCount;
+    private boolean enPassant;
     private Map<ChessPiece.PieceType, String> nameAbbreviations;
 
 
@@ -22,6 +23,7 @@ public class ChessPiece {
         this.pieceColor = pieceColor;
         this.type = type;
         this.moveCount = 0;
+        this.enPassant = false;
         //The abbreviations for chess pieces
         this.nameAbbreviations = new HashMap<>();
         nameAbbreviations.put(PieceType.KING, "K");
@@ -49,6 +51,17 @@ public class ChessPiece {
         PAWN
     }
 
+    public void setEnPassant() {
+        enPassant = true;
+    }
+
+    public void resetEnPassant() {
+        enPassant = false;
+    }
+
+    public boolean canEnPassant() {
+        return enPassant;
+    }
 
 
     /**
@@ -65,7 +78,7 @@ public class ChessPiece {
         return type;
     }
 
-    public static void move() {
+    public void move() {
         moveCount += 1;
     }
 

@@ -59,7 +59,7 @@ public class PawnMoveCalculator implements ChessInterface {
         HashSet<ChessMove> legalMoves = new HashSet<>();
         ChessMove legalMove;
         ChessPosition end;
-        //Check forward moves for white
+        //Check moves for white
         if (team == ChessGame.TeamColor.WHITE) {
             //Check move forward 1
             end = new ChessPosition(row + 1, col);
@@ -68,6 +68,7 @@ public class PawnMoveCalculator implements ChessInterface {
                 //Check move forward 2
                 end = new ChessPosition(row + 2, col);
                 if (row == 2 && isValidPosition(end) && (noOtherPiece(board, end))) {
+                    board.getPiece(start).setEnPassant();
                     checkForPromotion(row, end, legalMoves, team);
                 }
 
@@ -85,9 +86,24 @@ public class PawnMoveCalculator implements ChessInterface {
             if ((isValidPosition(end)) && (isEnemy(board, end, team))) {
                 checkForPromotion(row, end, legalMoves, team);
             }
+
+            ChessPosition enPassant;
+            //Check en Passant left
+            end = new ChessPosition(row + 1, col - 1);
+            enPassant = new ChessPosition(row, col - 1);
+            if (row == 5 && isValidPosition(end) && isPawn(enPassant)) {
+                checkForPromotion(row, end, legalMoves, team);
+            }
+
+            //Check en Passant right
+            end = new ChessPosition(row + 1, col + 1);
+            enPassant = new ChessPosition(row, col + 1);
+            if (row == 5 && isValidPosition(end) && isPawn(enPassant)) {
+                checkForPromotion(row, end, legalMoves, team);
+            }
         }
 
-        //Check forward moves for black
+        //Check moves for black
         else {
             //Check move forward 1
             end = new ChessPosition(row - 1, col);
@@ -96,6 +112,7 @@ public class PawnMoveCalculator implements ChessInterface {
                 //Check move forward 2
                 end = new ChessPosition(row - 2, col);
                 if (row == 7 && isValidPosition(end) && (noOtherPiece(board, end))) {
+                    board.getPiece(start).setEnPassant();
                     checkForPromotion(row, end, legalMoves, team);
                 }
 
@@ -113,9 +130,34 @@ public class PawnMoveCalculator implements ChessInterface {
             if ((isValidPosition(end)) && (isEnemy(board, end, team))) {
                 checkForPromotion(row, end, legalMoves, team);
             }
+
+            ChessPosition enPassant;
+            //Check en Passant left
+            end = new ChessPosition(row - 1, col - 1);
+            enPassant = new ChessPosition(row, col - 1);
+            if (row == 4 && isValidPosition(end) && isPawn(enPassant)) {
+                checkForPromotion(row, end, legalMoves, team);
+            }
+
+            //Check en Passant right
+            end = new ChessPosition(row - 1, col + 1);
+            enPassant = new ChessPosition(row, col + 1);
+            if (row == 4 && isValidPosition(end) && isPawn(enPassant)) {
+                checkForPromotion(row, end, legalMoves, team);
+            }
         }
 
+
         return legalMoves;
+    }
+
+    public boolean isPawn(ChessPosition position) {
+        if (isValidPosition(position) && isEnemy(board, position, team)) {
+            if (board.getPiece(position).getPieceType() == ChessPiece.PieceType.PAWN) {
+                return board.getPiece(position).canEnPassant();
+            }
+        }
+        return false;
     }
 }
 
