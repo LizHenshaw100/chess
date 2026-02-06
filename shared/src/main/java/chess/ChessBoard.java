@@ -31,18 +31,21 @@ public class ChessBoard {
 
         for (int i=1; i<9; i++) {
             for (int j=1; j<9; j++) {
-                ChessPosition position = new ChessPosition(i, j);
-                ChessPiece oldPiece = oldBoard.getPiece(position);
-                if (oldPiece != null) {
-                    ChessPiece pieceCopy = new ChessPiece(oldPiece);
-                    addPiece(position, pieceCopy);
-                    if (oldPiece.getTeamColor() == WHITE) {
-                        whitePieces.put(position, oldPiece);
-                    }
-                    else {
-                        blackPieces.put(position, oldPiece);
-                    }
-                }
+                copyPieceIfExists(oldBoard, new ChessPosition(i, j));
+            }
+        }
+    }
+
+    public void copyPieceIfExists(ChessBoard oldBoard, ChessPosition position) {
+        ChessPiece oldPiece = oldBoard.getPiece(position);
+        if (oldPiece != null) {
+            ChessPiece pieceCopy = new ChessPiece(oldPiece);
+            addPiece(position, pieceCopy);
+            if (oldPiece.getTeamColor() == WHITE) {
+                whitePieces.put(position, oldPiece);
+            }
+            else {
+                blackPieces.put(position, oldPiece);
             }
         }
     }
