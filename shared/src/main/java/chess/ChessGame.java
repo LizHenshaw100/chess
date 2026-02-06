@@ -73,20 +73,8 @@ public class ChessGame {
         for (ChessMove move : moves) {
             testGame = new ChessGame(this);
             testGame.makeTestMove(move);
-            if (!testGame.isInCheck(team)) {
-                if (isCastling(move) ) {
-                    if (!isInCheck(team)) {
-                        ChessMove kingPath = getCastlingPath(move);
-                        testGame = new ChessGame(this);
-                        testGame.makeTestMove(kingPath);
-                        if (!testGame.isInCheck(team)) {
-                            validMoves.add(move);
-                        }
-                    }
-                }
-                else {
-                    validMoves.add(move);
-                }
+            if (!testGame.isInCheck(team) && isCastlingLegal(move, team)) {
+                validMoves.add(move);
             }
         }
         return validMoves;
@@ -139,24 +127,15 @@ public class ChessGame {
                         board.removePiece(getEnPassantPos(move, color));
                     }
                     if (isCastling(move)) {
-                        if (isQueensideCastling(move)) {
-                            ChessPosition rookPos;
-                            rookPos = getQCastlingPos(color);
-                            ChessPiece rook;
-                            rook = board.getPiece(rookPos);
-                            board.removePiece(rookPos);
-                            ChessPosition newRookPos = getNewQCastlingPos(color);
-                            board.addPiece(newRookPos, rook);
-                        }
-                        else {
-                            ChessPosition rookPos;
-                            rookPos = getKCastlingPos(color);
-                            ChessPiece rook;
-                            rook = board.getPiece(rookPos);
-                            board.removePiece(rookPos);
-                            ChessPosition newRookPos = getNewKCastlingPos(color);
-                            board.addPiece(newRookPos, rook);
-                        }
+                        ChessPosition rookPos =
+                                isQueensideCastling(move) ? getQCastlingPos(color) : getKCastlingPos(color);
+
+                        ChessPosition newRookPos =
+                                isQueensideCastling(move) ? getNewQCastlingPos(color) : getNewKCastlingPos(color);
+
+                        ChessPiece rook = board.getPiece(rookPos);
+                        board.removePiece(rookPos);
+                        board.addPiece(newRookPos, rook);
                     }
                     piece.move();
                     board.addPiece(end, piece);
@@ -168,6 +147,20 @@ public class ChessGame {
         }
         throw new InvalidMoveException();
     }
+
+    public boolean isCastlingLegal(ChessMove move, TeamColor team) {
+        if (!isCastling(move)) {
+            return true;
+        }
+        if (isInCheck(team)) {
+            return false;
+        }
+        ChessMove kingPath = getCastlingPath(move);
+        ChessGame testGame = new ChessGame(this);
+        testGame.makeTestMove(kingPath);
+        return !testGame.isInCheck(team);
+    }
+
 
     public ChessPosition getNewQCastlingPos(TeamColor color) {
         ChessPosition pos;
