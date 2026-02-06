@@ -3,6 +3,8 @@ package chess;
 import java.util.Collection;
 import java.util.HashSet;
 
+import chess.ChessGame.TeamColor;
+
 public interface ChessInterface {
     Collection<ChessMove> getLegalMoves();
 
@@ -39,7 +41,7 @@ public interface ChessInterface {
         return (position.getRow() <= 8) && (position.getRow() >= 1) && (position.getColumn() <= 8) && (position.getColumn() >= 1);
     }
 
-    default void singleSpaceChecker(ChessBoard board, ChessPosition end, HashSet<ChessMove> legalMoves, ChessPosition start, ChessGame.TeamColor team) {
+    default void singleSpaceChecker(ChessBoard board, ChessPosition end, HashSet<ChessMove> legalMoves, ChessPosition start, TeamColor team) {
         if (isValidPosition(end)) {
             if (noOtherPiece(board, end)) {
                 ChessMove legalMove = new ChessMove(start, end, null);

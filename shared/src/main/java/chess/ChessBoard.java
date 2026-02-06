@@ -17,8 +17,6 @@ public class ChessBoard {
     public ChessPiece[][] board;
     HashMap<ChessPosition, ChessPiece> whitePieces;
     HashMap<ChessPosition, ChessPiece> blackPieces;
-    ChessPosition whiteKing;
-    ChessPosition blackKing;
 
     public ChessBoard() {
         board = new ChessPiece[8][8];
@@ -220,11 +218,13 @@ public class ChessBoard {
             return false;
         }
         ChessBoard that = (ChessBoard) o;
-        return Objects.deepEquals(board, that.board) && Objects.equals(whiteKing, that.whiteKing) && Objects.equals(blackKing, that.blackKing) && Objects.equals(whitePieces, that.whitePieces) && Objects.equals(blackPieces, that.blackPieces);
+        boolean bool1;
+
+        return Objects.deepEquals(board, that.board) && Objects.equals(whitePieces, that.whitePieces) && Objects.equals(blackPieces, that.blackPieces);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Arrays.deepHashCode(board), whitePieces, blackPieces, whiteKing, blackKing);
+        return Objects.hash(Arrays.deepHashCode(board), whitePieces, blackPieces);
     }
 }
