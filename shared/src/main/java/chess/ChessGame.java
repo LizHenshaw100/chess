@@ -306,15 +306,15 @@ public class ChessGame {
             board.removePiece(getEnPassantPos(move, color));
         }
         if (isQueensideCastling(move)) {
-            ChessPosition CastlingPos = getQCastlingPos(color);
-            ChessPiece rook = board.getPiece(CastlingPos);
-            board.removePiece(CastlingPos);
+            ChessPosition castlingPos = getQCastlingPos(color);
+            ChessPiece rook = board.getPiece(castlingPos);
+            board.removePiece(castlingPos);
             board.addPiece(getNewQCastlingPos(color), rook);
         }
         if (isKingsideCastling(move)) {
-            ChessPosition CastlingPos = getKCastlingPos(color);
-            ChessPiece rook = board.getPiece(CastlingPos);
-            board.removePiece(CastlingPos);
+            ChessPosition castlingPos = getKCastlingPos(color);
+            ChessPiece rook = board.getPiece(castlingPos);
+            board.removePiece(castlingPos);
             board.addPiece(getNewKCastlingPos(color), rook);
         }
         board.removePiece(start);

@@ -30,146 +30,72 @@ public class KingMoveCalculator implements ChessInterface {
     public Collection<ChessMove> getLegalMoves() {
         HashSet<ChessMove> legalMoves = new HashSet<>();
         //Check front
-        ChessPosition end = new ChessPosition(row+1, col);
+        ChessPosition end = new ChessPosition(row + 1, col);
         singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check front right diag
-        end = new ChessPosition(row+1, col+1);
+        end = new ChessPosition(row + 1, col + 1);
         singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check right
-        end = new ChessPosition(row, col+1);
+        end = new ChessPosition(row, col + 1);
         singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check back right diag
-        end = new ChessPosition(row-1, col+1);
+        end = new ChessPosition(row - 1, col + 1);
         singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check back
-        end = new ChessPosition(row-1, col);
+        end = new ChessPosition(row - 1, col);
         singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check back left diag
-        end = new ChessPosition(row-1, col-1);
+        end = new ChessPosition(row - 1, col - 1);
         singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check left
-        end = new ChessPosition(row, col-1);
+        end = new ChessPosition(row, col - 1);
         singleSpaceChecker(board, end, legalMoves, start, team);
 
         //Check front left diag
-        end = new ChessPosition(row+1, col-1);
+        end = new ChessPosition(row + 1, col - 1);
         singleSpaceChecker(board, end, legalMoves, start, team);
 
-        //Check for Queen's side castling
         ChessPiece king = board.getPiece(start);
-        if (king.getMoveCount() == 0)
-        {
-            //Get color
-            if (king.getTeamColor() == WHITE) {
-                ChessPosition qCastlePosition = new ChessPosition(1, 1);
-                //Check if there is a piece in Queen's side castle spot
-                if (board.getPiece(qCastlePosition) != null) {
-                    //Check if piece in Queen's side castle spot is a Rook and hasn't moved
-                    if (board.getPiece(qCastlePosition).getPieceType() == ROOK && board.getPiece(qCastlePosition).getMoveCount() == 0){
-                        //Check if all of the pieces inbetween are empty
-                        ChessPosition position;
-                        boolean canQueensideCastle = true;
-                        for(int i = 2; i<5; i++) {
-                            position = new ChessPosition(1, i);
-                            if (!noOtherPiece(board, position)) {
-                                canQueensideCastle = false;
-                            }
-                        }
-                        if (canQueensideCastle) {
-                            end = new ChessPosition(1, 3);
-                            ChessMove legalMove = new ChessMove(start, end, null);
-                            legalMoves.add(legalMove);
-                        }
-                    }
-                }
-            }
-            else {
-                ChessPosition qCastlePosition = new ChessPosition(8, 1);
-                //Check if there is a piece in Queen's side castle spot
-                if (board.getPiece(qCastlePosition) != null) {
-                    //Check if piece in Queen's side castle spot is a Rook and hasn't moved
-                    if (board.getPiece(qCastlePosition).getPieceType() == ROOK && board.getPiece(qCastlePosition).getMoveCount() == 0){
-                        //Check if all of the pieces inbetween are empty
-                        ChessPosition position;
-                        boolean canQueensideCastle = true;
-                        for(int i = 2; i<5; i++) {
-                            position = new ChessPosition(8, i);
-                            if (!noOtherPiece(board, position)) {
-                                canQueensideCastle = false;
-                            }
-                        }
-                        if (canQueensideCastle) {
-                            end = new ChessPosition(8, 3);
-                            ChessMove legalMove = new ChessMove(start, end, null);
-                            legalMoves.add(legalMove);
-                        }
-                    }
-                }
-
-            }
-        }
-
-
-
-        //Check for King's side castling
         if (king.getMoveCount() == 0) {
-            //Get color
-            if (king.getTeamColor() == WHITE) {
-                ChessPosition kCastlePosition = new ChessPosition(1, 8);
-                //Check if there is a piece in Queen's side castle spot
-                if (board.getPiece(kCastlePosition) != null) {
-                    //Check if piece in Queen's side castle spot is a Rook and hasn't moved
-                    if (board.getPiece(kCastlePosition).getPieceType() == ROOK && board.getPiece(kCastlePosition).getMoveCount() == 0){
-                        //Check if all of the pieces inbetween are empty
-                        ChessPosition position;
-                        boolean canKingsideCastle = true;
-                        for(int i = 6; i<8; i++) {
-                            position = new ChessPosition(1, i);
-                            if (!noOtherPiece(board, position)) {
-                                canKingsideCastle = false;
-                            }
-                        }
-                        if (canKingsideCastle) {
-                            end = new ChessPosition(1, 7);
-                            ChessMove legalMove = new ChessMove(start, end, null);
-                            legalMoves.add(legalMove);
-                        }
-                    }
-                }
-            }
-            else {
-                ChessPosition kCastlePosition = new ChessPosition(8, 8);
-                //Check if there is a piece in Queen's side castle spot
-                if (board.getPiece(kCastlePosition) != null) {
-                    //Check if piece in Queen's side castle spot is a Rook and hasn't moved
-                    if (board.getPiece(kCastlePosition).getPieceType() == ROOK && board.getPiece(kCastlePosition).getMoveCount() == 0){
-                        //Check if all of the pieces inbetween are empty
-                        ChessPosition position;
-                        boolean canKingsideCastle = true;
-                        for(int i = 6; i<8; i++) {
-                            position = new ChessPosition(8, i);
-                            if (!noOtherPiece(board, position)) {
-                                canKingsideCastle = false;
-                            }
-                        }
-                        if (canKingsideCastle) {
-                            end = new ChessPosition(8, 7);
-                            ChessMove legalMove = new ChessMove(start, end, null);
-                            legalMoves.add(legalMove);
-                        }
-                    }
-                }
-
-            }
+            addCastlingMoves(legalMoves);
         }
 
         return legalMoves;
     }
+
+    public void addCastlingMoves(Collection<ChessMove> legalMoves) {
+        int row;
+        if (team == WHITE) {
+            row = 1;
+        }
+        else {
+            row = 8;
+        }
+        tryAddCastlingMove(legalMoves, new ChessPosition(row, 1), 2, 4, new ChessPosition(row, 3));
+
+        tryAddCastlingMove(legalMoves, new ChessPosition(row, 8), 6, 7, new ChessPosition(row, 7));
+    }
+
+    public void tryAddCastlingMove(Collection<ChessMove> legalMoves, ChessPosition rookPos, int startCol, int endCol, ChessPosition kingEnd) {
+        ChessPiece rook = board.getPiece(rookPos);
+        if (rook == null || rook.getPieceType() != ROOK || rook.getMoveCount() != 0) {
+            return;
+        }
+        int row = rookPos.getRow();
+        for (int col = startCol; col <= endCol; col++) {
+            if (!noOtherPiece(board, new ChessPosition(row, col))) {
+                return;
+            }
+        }
+        legalMoves.add(new ChessMove(start, kingEnd, null));
+    }
+
+
 }
 

@@ -219,8 +219,8 @@ public class ChessBoard {
         }
         ChessBoard that = (ChessBoard) o;
         boolean bool1;
-
-        return Objects.deepEquals(board, that.board) && Objects.equals(whitePieces, that.whitePieces) && Objects.equals(blackPieces, that.blackPieces);
+        bool1 = Objects.deepEquals(board, that.board) && Objects.equals(whitePieces, that.whitePieces);
+        return bool1 && Objects.equals(blackPieces, that.blackPieces);
     }
 
     @Override
