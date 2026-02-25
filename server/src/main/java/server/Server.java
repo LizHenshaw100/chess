@@ -8,7 +8,7 @@ public class Server {
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
-
+        javalin.get("/", ctx -> ctx.redirect("/index.html"));
         // Register your endpoints and exception handlers here.
 
     }
