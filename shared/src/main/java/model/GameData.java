@@ -2,7 +2,7 @@ package model;
 
 import chess.ChessGame;
 
-class GameData {
+public class GameData {
     private final int gameID;
     private final String whiteUsername;
     private final String blackUsername;
@@ -17,5 +17,13 @@ class GameData {
         this.blackUsername = blackUsername;
         this.gameName = gameName;
         this.game = new ChessGame();
+    }
+
+    public String getName() {
+        return this.gameName;
+    }
+
+    public String getID() {
+        return this.gameID;
     }
 }
