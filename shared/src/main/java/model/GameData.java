@@ -23,7 +23,7 @@ public class GameData {
         return this.gameName;
     }
 
-    public String getID() {
+    public int getID() {
         return this.gameID;
     }
 }

@@ -1,11 +1,10 @@
-package dataaccess.daos;
+package dataaccess;
 
-import dataaccess.exceptions.UserTakenException;
 import model.AuthData;
 
 import java.util.HashMap;
 
-public class AuthDAO {
+public class MemoryAuthDAO implements AuthDao{
     private final HashMap<AuthData, String> auths = new HashMap<>();
 
     public void clearAllAuths(){
