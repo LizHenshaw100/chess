@@ -15,8 +15,9 @@ public class Server {
     private AuthDao authDao = new MemoryAuthDAO();
     private GameDao gameDao = new MemoryGameDAO();
 
-    private ClearService clearService = new ClearService(gameDao,userDao, authDao);
-    private UserService userService = new UserService(gameDao,userDao, authDao);
+    private ClearService clearService = new ClearService(gameDao, userDao, authDao);
+    private UserService userService = new UserService(gameDao, userDao, authDao);
+    private GameService gameService = new GameService(gameDao, userDao, authDao);
 
     public Server() {
 
@@ -62,15 +63,37 @@ public class Server {
         // List Games
         javalin.get("/game", ctx -> {
             String authToken = ctx.header("authorization");
-            GamesListResult gamesListResult = userService.login(loginRequest);
+            GamesListResult gamesListResult = gameService.getGamesList(authToken);
 
             ctx.status(200);
-            ctx.json(authData);
+            ctx.json(gamesListResult);
+        });
+        // Create Game
+        javalin.post("/game", ctx -> {
+            String authToken = ctx.header("authorization");
+            CreateGameRequest createGameRequest = ctx.bodyAsClass(CreateGameRequest.class);
+            CreateGameResult createGameResult = new CreateGameResult(gameService.createGame(authToken, createGameRequest.getGameName()));
+
+            ctx.status(200);
+            ctx.json(createGameResult);
+        });
+        // Join Game
+        javalin.put("/game", ctx -> {
+            String authToken = ctx.header("authorization");
+            JoinGameRequest joinGameRequest = ctx.bodyAsClass(JoinGameRequest.class);
+            gameService.joinGame(authToken, joinGameRequest.getPlayerColor(), joinGameRequest.getGameID());
+
+            ctx.status(200);
         });
     }
 
     private void registerExceptionHandlers() {
         javalin.exception(UserTakenException.class, (e, ctx) -> {
+            ctx.status(403);
+            ctx.json(Map.of("message", "Error: " + e.getMessage()));
+        });
+
+        javalin.exception(AlreadyTakenException.class, (e, ctx) -> {
             ctx.status(403);
             ctx.json(Map.of("message", "Error: " + e.getMessage()));
         });

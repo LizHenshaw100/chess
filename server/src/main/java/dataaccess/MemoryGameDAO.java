@@ -11,11 +11,14 @@ public class MemoryGameDAO implements GameDao {
         games.clear();
     }
 
-    public void createGame(GameData gameData) {
-        games.put(gameData.getID(), gameData);
+    public int createGame(String gameName) {
+        int gameId = 10000 + new java.util.Random().nextInt(90000);
+        GameData gameData = new GameData(gameId, "", "", gameName);
+        games.put(gameId, gameData);
+        return gameId;
     }
 
-    public GameData getGame(String gameID) {
+    public GameData getGame(int gameID) {
         return games.get(gameID);
     }
 

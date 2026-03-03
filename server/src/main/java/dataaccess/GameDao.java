@@ -7,9 +7,9 @@ import model.GameData;
 public interface GameDao {
     void clearAllGames();
 
-    void createGame(GameData gameData) throws DataAccessException;
+    int createGame(String gameName) throws DataAccessException;
 
-    GameData getGame(String gameID);
+    GameData getGame(int gameID);
 
     GameData[] listGames();
 

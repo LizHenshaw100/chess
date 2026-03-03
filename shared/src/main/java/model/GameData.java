@@ -3,14 +3,14 @@ package model;
 import chess.ChessGame;
 
 public class GameData {
-    private final int gameID;
-    private final String whiteUsername;
-    private final String blackUsername;
-    private final String gameName;
-    private final ChessGame game;
+    private int gameID;
+    private String whiteUsername;
+    private String blackUsername;
+    private String gameName;
+    private ChessGame game;
 
 
-    GameData(int gameID, String whiteUsername, String blackUsername, String gameName) {
+    public GameData(int gameID, String whiteUsername, String blackUsername, String gameName) {
 
         this.gameID = gameID;
         this.whiteUsername = whiteUsername;
@@ -25,5 +25,9 @@ public class GameData {
 
     public int getID() {
         return this.gameID;
+    }
+
+    public boolean isAvailable(String playerColor) {
+        return ((playerColor == "WHITE" && whiteUsername == "") || (playerColor == "BLACK" && blackUsername == ""));
     }
 }
