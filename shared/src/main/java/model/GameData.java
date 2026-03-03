@@ -31,7 +31,13 @@ public class GameData {
     }
 
     public boolean isAvailable(TeamColor playerColor) {
-        return ((playerColor == TeamColor.WHITE && Objects.equals(whiteUsername, null)) || (playerColor == TeamColor.BLACK && Objects.equals(blackUsername, null)));
+        if (playerColor == TeamColor.WHITE && Objects.equals(whiteUsername, null)) {
+            return true;
+        }
+        if (playerColor == TeamColor.BLACK && Objects.equals(blackUsername, null)) {
+            return true;
+        }
+        return false;
     }
 
     public int getGameID() {

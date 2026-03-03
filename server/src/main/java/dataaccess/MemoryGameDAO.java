@@ -27,9 +27,6 @@ public class MemoryGameDAO implements GameDao {
         return games.values().toArray(new GameData[0]);
     }
 
-    public void updateGame(GameData game) {
-        games.put(game.getID(), game);
-    }
 
     public void joinGame(int gameID, chess.ChessGame.TeamColor playerColor, String username) {
         if (playerColor == chess.ChessGame.TeamColor.WHITE) {
