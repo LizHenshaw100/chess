@@ -52,7 +52,21 @@ public class Server {
             ctx.json(authData);
         });
         // Logout
-        
+        javalin.delete("/session", ctx -> {
+            String authToken = ctx.header("authorization");
+            userService.logout(authToken);
+
+            ctx.status(200);
+            ctx.json(Map.of());
+        });
+        // List Games
+        javalin.get("/game", ctx -> {
+            String authToken = ctx.header("authorization");
+            GamesListResult gamesListResult = userService.login(loginRequest);
+
+            ctx.status(200);
+            ctx.json(authData);
+        });
     }
 
     private void registerExceptionHandlers() {
