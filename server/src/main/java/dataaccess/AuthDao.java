@@ -2,12 +2,11 @@ package dataaccess;
 
 import dataaccess.exceptions.DataAccessException;
 import model.AuthData;
-import model.UserData;
 
 public interface AuthDao {
     void clearAllAuths();
 
-    void createAuth(AuthData authData) throws DataAccessException;
+    AuthData createAuth(String username) throws DataAccessException;
 
     String getAuth(AuthData authData);
 }

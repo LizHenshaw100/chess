@@ -1,11 +1,11 @@
 package model;
 
 public class AuthData {
-    private final String authToken;
-    private final String username;
+    private String authToken;
+    private String username;
 
 
-    AuthData(String authToken, String username) {
+    public AuthData(String authToken, String username) {
 
         this.authToken = authToken;
         this.username = username;
@@ -13,5 +13,17 @@ public class AuthData {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

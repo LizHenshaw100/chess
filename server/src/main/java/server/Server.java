@@ -1,8 +1,9 @@
 package server;
 
 import dataaccess.*;
-import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.*;
 import io.javalin.*;
+import model.*;
 import service.*;
 
 import java.util.Map;
@@ -18,8 +19,10 @@ public class Server {
     private UserService userService = new UserService(gameDao,userDao, authDao);
 
     public Server() {
+
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.get("/", ctx -> ctx.redirect("/index.html"));
+
         // Register your endpoints and exception handlers here.
         registerEndpoints();
         registerExceptionHandlers();
@@ -27,23 +30,28 @@ public class Server {
 
     private void registerEndpoints() {
         // Clear
-        javalin.delete("/db", ctx -> {clearService.clear(); ctx.status(200); ctx.json(Map.of());});
+        javalin.delete("/db", ctx -> {
+            clearService.clear();
+            ctx.status(200);
+            ctx.json(Map.of());
+        });
         // Register
         javalin.post("/user", ctx -> {
-            try {
-                RegisterRequest request = ctx.bodyAsClass(RegisterRequest.class);
-                RegisterResult result = registerService.register(request);
+            UserData userData = ctx.bodyAsClass(UserData.class);
+            AuthData authData = userService.register(userData);
 
-                ctx.status(200);
-                ctx.json(result);
-            } catch (DataAccessException e) {
-                ctx.status(400);
-                ctx.json(Map.of("message", "Error: " + e.getMessage()));
-            }
-        });}
+            ctx.status(200);
+            ctx.json(authData);
+        });
+    }
 
     private void registerExceptionHandlers() {
-        javalin.exception(DataAccessException.class, (e, ctx) -> {
+        javalin.exception(UserTakenException.class, (e, ctx) -> {
+            ctx.status(403);
+            ctx.json(Map.of("message", "Error: " + e.getMessage()));
+        });
+
+        javalin.exception(BadRequestException.class, (e, ctx) -> {
             ctx.status(400);
             ctx.json(Map.of("message", "Error: " + e.getMessage()));
         });

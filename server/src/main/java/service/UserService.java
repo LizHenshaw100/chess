@@ -1,7 +1,8 @@
 package service;
 
 import dataaccess.*;
-import dataaccess.exceptions.DataAccessException;
+import dataaccess.exceptions.*;
+import model.AuthData;
 import model.UserData;
 
 public class UserService {
@@ -15,8 +16,15 @@ public class UserService {
         this.authDao = authDao;
     }
 
-    public void register(UserData userData) throws DataAccessException {
+    public AuthData register(UserData userData) throws DataAccessException {
+        if (userData.getUsername() == null ||
+                userData.getPassword() == null ||
+                userData.getEmail() == null) {
+
+            throw new BadRequestException();
+        }
         userDao.createUser(userData);
+        return authDao.createAuth(userData.getUsername());
     }
 
 }
