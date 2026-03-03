@@ -37,4 +37,17 @@ public class UserServiceTest {
             service.register(dup);
         });
     }
+
+    @Test
+    public void loginTest() throws DataAccessException {
+        UserDao userDao = new MemoryUserDAO();
+        GameDao gameDao = new MemoryGameDAO();
+        AuthDao authDao = new MemoryAuthDAO();
+
+        UserService service = new UserService(gameDao, userDao, authDao);
+        UserData userData = new UserData("liz", "password", "email@email.com");
+        service.register(userData);
+
+        
+    }
 }

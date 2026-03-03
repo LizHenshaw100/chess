@@ -35,7 +35,21 @@ public class GameService {
         return gameDao.createGame(gameName);
     }
 
-    public void joinGame(String authToken, TeamColor playerColor, int gameID) throws DataAccessException{
+    public void joinGame(String authToken, String playerColorStr, int gameID) throws DataAccessException{
+        if (playerColorStr == null || playerColorStr.isEmpty()) {
+            throw new BadRequestException();
+        }
+
+        TeamColor playerColor;
+        if (playerColorStr.equalsIgnoreCase("WHITE")) {
+            playerColor = TeamColor.WHITE;
+        }
+        else if (playerColorStr.equalsIgnoreCase("BLACK")) {
+            playerColor = TeamColor.BLACK;
+        }
+        else {
+            throw new BadRequestException();
+        }
         if (authToken == null || authDao.getAuth(authToken) == null) {
             throw new UnauthorizedException();
         }

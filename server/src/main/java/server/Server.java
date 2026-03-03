@@ -1,5 +1,6 @@
 package server;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import dataaccess.*;
 import dataaccess.exceptions.*;
 import io.javalin.*;
@@ -80,7 +81,10 @@ public class Server {
         // Join Game
         javalin.put("/game", ctx -> {
             String authToken = ctx.header("authorization");
-            JoinGameRequest joinGameRequest = ctx.bodyAsClass(JoinGameRequest.class);
+            JoinGameRequest joinGameRequest;
+
+            joinGameRequest = ctx.bodyAsClass(JoinGameRequest.class);
+
             gameService.joinGame(authToken, joinGameRequest.getPlayerColor(), joinGameRequest.getGameID());
 
             ctx.status(200);
