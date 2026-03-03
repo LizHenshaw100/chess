@@ -5,6 +5,7 @@ import dataaccess.exceptions.*;
 import io.javalin.*;
 import model.*;
 import service.*;
+import io.javalin.json.JavalinJackson;
 
 import java.util.Map;
 
@@ -21,9 +22,11 @@ public class Server {
 
     public Server() {
 
-        javalin = Javalin.create(config -> config.staticFiles.add("web"));
+        javalin = Javalin.create(config -> {
+                    config.staticFiles.add("web");
+                    config.jsonMapper(new JavalinJackson());
+                });
         javalin.get("/", ctx -> ctx.redirect("/index.html"));
-
         // Register your endpoints and exception handlers here.
         registerEndpoints();
         registerExceptionHandlers();
