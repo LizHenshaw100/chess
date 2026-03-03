@@ -13,5 +13,6 @@ public interface GameDao {
 
     GameData[] listGames();
 
-    void updateGame(GameData game);
+    void joinGame(int gameID, chess.ChessGame.TeamColor playerColor, String username);
+
 }

@@ -1,20 +1,21 @@
 package model;
+import chess.ChessGame.TeamColor;
 
 public class JoinGameRequest {
-    String playerColor;
+    TeamColor playerColor;
     int gameID;
     public JoinGameRequest() {}
 
-    public JoinGameRequest(String playerColor, int gameID) {
+    public JoinGameRequest(TeamColor playerColor, int gameID) {
         this.playerColor = playerColor;
         this.gameID = gameID;
     }
 
-    public String getPlayerColor() {
+    public TeamColor getPlayerColor() {
         return playerColor;
     }
 
-    public void setPlayerColor(String playerColor) {
+    public void setPlayerColor(TeamColor playerColor) {
         this.playerColor = playerColor;
     }
 

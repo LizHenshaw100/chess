@@ -3,6 +3,7 @@ package service;
 import dataaccess.*;
 import dataaccess.exceptions.*;
 import model.*;
+import chess.ChessGame.TeamColor;
 
 public class GameService {
     private UserDao userDao;
@@ -34,7 +35,7 @@ public class GameService {
         return gameDao.createGame(gameName);
     }
 
-    public void joinGame(String authToken, String playerColor, int gameID) throws DataAccessException{
+    public void joinGame(String authToken, TeamColor playerColor, int gameID) throws DataAccessException{
         if (authToken == null || authDao.getAuth(authToken) == null) {
             throw new UnauthorizedException();
         }
@@ -43,6 +44,9 @@ public class GameService {
         }
         else if (!gameDao.getGame(gameID).isAvailable(playerColor)) {
             throw new AlreadyTakenException();
+        }
+        else {
+            gameDao.joinGame(gameID, playerColor, authDao.getAuth(authToken).getUsername());
         }
     }
 
