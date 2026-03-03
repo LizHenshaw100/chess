@@ -2,8 +2,9 @@ package service;
 
 import dataaccess.*;
 import dataaccess.exceptions.*;
-import model.AuthData;
-import model.UserData;
+import model.*;
+
+import java.util.Objects;
 
 public class UserService {
     private UserDao userDao;
@@ -20,11 +21,26 @@ public class UserService {
         if (userData.getUsername() == null ||
                 userData.getPassword() == null ||
                 userData.getEmail() == null) {
-
             throw new BadRequestException();
         }
         userDao.createUser(userData);
         return authDao.createAuth(userData.getUsername());
+    }
+
+    public AuthData login(LoginRequest loginRequest) throws DataAccessException {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+        if (username == null || password == null) {
+            throw new BadRequestException();
+        }
+        else if (userDao.getUser(username) == null || !Objects.equals(userDao.getUser(username).getPassword(), password)) {
+            throw new UnauthorizedException();
+        }
+        else
+        {
+            return authDao.createAuth(username);
+        }
+
     }
 
 }

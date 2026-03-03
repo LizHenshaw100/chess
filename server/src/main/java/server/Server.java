@@ -43,11 +43,26 @@ public class Server {
             ctx.status(200);
             ctx.json(authData);
         });
+        // Login
+        javalin.post("/session", ctx -> {
+            LoginRequest loginRequest = ctx.bodyAsClass(LoginRequest.class);
+            AuthData authData = userService.login(loginRequest);
+
+            ctx.status(200);
+            ctx.json(authData);
+        });
+        // Logout
+        
     }
 
     private void registerExceptionHandlers() {
         javalin.exception(UserTakenException.class, (e, ctx) -> {
             ctx.status(403);
+            ctx.json(Map.of("message", "Error: " + e.getMessage()));
+        });
+
+        javalin.exception(UnauthorizedException.class, (e, ctx) -> {
+            ctx.status(401);
             ctx.json(Map.of("message", "Error: " + e.getMessage()));
         });
 
