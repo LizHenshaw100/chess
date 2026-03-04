@@ -5,7 +5,8 @@ import dataaccess.exceptions.*;
 import io.javalin.*;
 import model.*;
 import service.*;
-import io.javalin.json.JavalinJackson;
+
+import com.google.gson.Gson;
 
 import java.util.Map;
 
@@ -20,13 +21,13 @@ public class Server {
     private UserService userService = new UserService(gameDao, userDao, authDao);
     private GameService gameService = new GameService(gameDao, userDao, authDao);
 
+    private final Gson serializer = new Gson();
     public Server() {
 
-        javalin = Javalin.create(config -> {
-                    config.staticFiles.add("web");
-                    config.jsonMapper(new JavalinJackson());
-                });
+        javalin = Javalin.create(config -> config.staticFiles.add("web"));
         javalin.get("/", ctx -> ctx.redirect("/index.html"));
+
+
         // Register your endpoints and exception handlers here.
         registerEndpoints();
         registerExceptionHandlers();
@@ -37,23 +38,23 @@ public class Server {
         javalin.delete("/db", ctx -> {
             clearService.clear();
             ctx.status(200);
-            ctx.json(Map.of());
+            ctx.result(serializer.toJson(Map.of()));
         });
         // Register
         javalin.post("/user", ctx -> {
-            UserData userData = ctx.bodyAsClass(UserData.class);
+            UserData userData = serializer.fromJson(ctx.body(), UserData.class);
             AuthData authData = userService.register(userData);
 
             ctx.status(200);
-            ctx.json(authData);
+            ctx.result(serializer.toJson(authData));
         });
         // Login
         javalin.post("/session", ctx -> {
-            LoginRequest loginRequest = ctx.bodyAsClass(LoginRequest.class);
+            LoginRequest loginRequest = serializer.fromJson(ctx.body(), LoginRequest.class);
             AuthData authData = userService.login(loginRequest);
 
             ctx.status(200);
-            ctx.json(authData);
+            ctx.result(serializer.toJson(authData));
         });
         // Logout
         javalin.delete("/session", ctx -> {
@@ -61,7 +62,7 @@ public class Server {
             userService.logout(authToken);
 
             ctx.status(200);
-            ctx.json(Map.of());
+            ctx.result(serializer.toJson(Map.of()));
         });
         // List Games
         javalin.get("/game", ctx -> {
@@ -69,23 +70,23 @@ public class Server {
             GamesListResult gamesListResult = gameService.getGamesList(authToken);
 
             ctx.status(200);
-            ctx.json(gamesListResult);
+            ctx.result(serializer.toJson(gamesListResult));
         });
         // Create Game
         javalin.post("/game", ctx -> {
             String authToken = ctx.header("authorization");
-            CreateGameRequest createGameRequest = ctx.bodyAsClass(CreateGameRequest.class);
+            CreateGameRequest createGameRequest = serializer.fromJson(ctx.body(), CreateGameRequest.class);
             CreateGameResult createGameResult = new CreateGameResult(gameService.createGame(authToken, createGameRequest.getGameName()));
 
             ctx.status(200);
-            ctx.json(createGameResult);
+            ctx.result(serializer.toJson(createGameResult));
         });
         // Join Game
         javalin.put("/game", ctx -> {
             String authToken = ctx.header("authorization");
             JoinGameRequest joinGameRequest;
 
-            joinGameRequest = ctx.bodyAsClass(JoinGameRequest.class);
+            joinGameRequest = serializer.fromJson(ctx.body(), JoinGameRequest.class);
 
             gameService.joinGame(authToken, joinGameRequest.getPlayerColor(), joinGameRequest.getGameID());
 
@@ -96,27 +97,27 @@ public class Server {
     private void registerExceptionHandlers() {
         javalin.exception(UserTakenException.class, (e, ctx) -> {
             ctx.status(403);
-            ctx.json(Map.of("message", "Error: " + e.getMessage()));
+            ctx.result(serializer.toJson(Map.of("message", "Error: " + e.getMessage())));
         });
 
         javalin.exception(AlreadyTakenException.class, (e, ctx) -> {
             ctx.status(403);
-            ctx.json(Map.of("message", "Error: " + e.getMessage()));
+            ctx.result(serializer.toJson(Map.of("message", "Error: " + e.getMessage())));
         });
 
         javalin.exception(UnauthorizedException.class, (e, ctx) -> {
             ctx.status(401);
-            ctx.json(Map.of("message", "Error: " + e.getMessage()));
+            ctx.result(serializer.toJson(Map.of("message", "Error: " + e.getMessage())));
         });
 
         javalin.exception(BadRequestException.class, (e, ctx) -> {
             ctx.status(400);
-            ctx.json(Map.of("message", "Error: " + e.getMessage()));
+            ctx.result(serializer.toJson(Map.of("message", "Error: " + e.getMessage())));
         });
 
         javalin.exception(Exception.class, (e, ctx) -> {
             ctx.status(500);
-            ctx.json(Map.of("message", "Error: " + e.getMessage()));
+            ctx.result(serializer.toJson(Map.of("message", "Error: " + e.getMessage())));
         });
     }
 
