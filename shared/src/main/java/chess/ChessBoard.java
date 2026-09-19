@@ -59,28 +59,44 @@ public class ChessBoard {
 
         ChessPiece piece;
         ChessPosition position;
-        for (int row=0; row<9; row++) {
+        for (int row=1; row<=8; row++) {
             // white pawns
-            if (row == 0) {
+            if (row == 2) {
                 piece = new ChessPiece(WHITE, PAWN);
-                for (int col = 0; col < 9; col++) {
+                for (int col = 1; col <= 8; col++) {
                     position = new ChessPosition(row, col);
                     addPiece(position, piece);
                 }
             }
             // white row
             if (row == 1) {
-                for (int col = 0; col < 9; col++) {
+                for (int col = 1; col <= 8; col++) {
                     position = new ChessPosition(row, col);
-                    piece = new ChessPiece(WHITE, pieceOrder[col]);
+                    piece = new ChessPiece(WHITE, pieceOrder[col-1]);
                     addPiece(position, piece);
                 }
             }
             // null rows
-            if (row > 1 && row < 6) {
-                for (int col=0; col<8; col++) {
+            if (row > 2 && row < 7) {
+                for (int col=1; col<=8; col++) {
                     position = new ChessPosition(row, col);
                     addPiece(position, null);
+                }
+            }
+            // black pawns
+            if (row==7){
+                for (int col=1; col<=8; col++) {
+                    position = new ChessPosition(row, col);
+                    piece = new ChessPiece(BLACK, PAWN);
+                    addPiece(position, piece);
+                }
+            }
+            // black row
+            if (row==8) {
+                for (int col=1; col<=8; col++) {
+                    position = new ChessPosition(row, col);
+                    piece = new ChessPiece(BLACK, pieceOrder[col-1]);
+                    addPiece(position, piece);
                 }
             }
         }
@@ -103,8 +119,8 @@ public class ChessBoard {
     @Override
     public String toString() {
         String returnValue = "";
-        for (int row=1; row<9; row++) {
-            for (int col=1; col<9; col++) {
+        for (int row=1; row<=8; row++) {
+            for (int col=1; col<=8; col++) {
                 returnValue += getPiece(new ChessPosition(row, col));
             }
         }
