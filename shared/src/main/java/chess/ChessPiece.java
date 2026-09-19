@@ -25,6 +25,12 @@ public class ChessPiece {
         if (type == PieceType.BISHOP) {
             this.moveCalc = new BishopMove();
         }
+        else if (type == PieceType.ROOK) {
+            this.moveCalc = new RookMove();
+        }
+        else if (type == PieceType.QUEEN) {
+            this.moveCalc = new QueenMove();
+        }
         else {
             this.moveCalc = new BishopMove();
         }
