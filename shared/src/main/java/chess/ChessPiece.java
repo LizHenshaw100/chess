@@ -38,7 +38,7 @@ public class ChessPiece {
             this.moveCalc = new KnightMove();
         }
         else {
-            this.moveCalc = new BishopMove();
+            this.moveCalc = new PawnMove();
         }
 
         this.nameAbbreviations = new HashMap<>();
