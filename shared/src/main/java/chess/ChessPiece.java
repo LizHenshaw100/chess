@@ -34,6 +34,9 @@ public class ChessPiece {
         else if (type == PieceType.KING) {
             this.moveCalc = new KingMove();
         }
+        else if (type == PieceType.KNIGHT) {
+            this.moveCalc = new KnightMove();
+        }
         else {
             this.moveCalc = new BishopMove();
         }
