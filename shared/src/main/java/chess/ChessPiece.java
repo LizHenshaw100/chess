@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
 
+import chess.MoveCalculator.*;
+
 /**
  * Represents a single chess piece
  * <p>
@@ -14,10 +16,18 @@ public class ChessPiece {
     ChessGame.TeamColor pieceColor;
     ChessPiece.PieceType type;
     HashMap<ChessPiece.PieceType, String> nameAbbreviations;
+    MoveCalculatorInterface moveCalc;
+
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.type = type;
+        if (type == PieceType.BISHOP) {
+            this.moveCalc = new BishopMove();
+        }
+        else {
+            this.moveCalc = new BishopMove();
+        }
 
         this.nameAbbreviations = new HashMap<>();
         nameAbbreviations.put(PieceType.KING, "K");
@@ -63,7 +73,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        return moveCalc.getMoves(board, myPosition);
     }
 
     @Override
@@ -72,12 +82,12 @@ public class ChessPiece {
             return false;
         }
         ChessPiece that = (ChessPiece) o;
-        return pieceColor == that.pieceColor && type == that.type && Objects.equals(nameAbbreviations, that.nameAbbreviations);
+        return pieceColor == that.pieceColor && type == that.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pieceColor, type, nameAbbreviations);
+        return Objects.hash(pieceColor, type);
     }
 
     @Override
