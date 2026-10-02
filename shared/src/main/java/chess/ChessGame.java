@@ -1,6 +1,8 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -22,6 +24,15 @@ public class ChessGame {
      */
     public TeamColor getTeamTurn() {
         return turn;
+    }
+
+    public void swapTeamTurn() {
+        if (getTeamTurn() == TeamColor.WHITE) {
+            setTeamTurn(TeamColor.BLACK);
+        }
+        else {
+            setTeamTurn(TeamColor.WHITE);
+        }
     }
 
     /**
@@ -59,7 +70,29 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPosition start = move.getStartPosition();
+        ChessPosition end = move.getEndPosition();
+        ChessPiece piece = board.getPiece(start);
+        if (piece == null) {
+            throw new InvalidMoveException();
+        }
+        TeamColor color = piece.getTeamColor();
+
+        ArrayList<ChessMove> moveList = (ArrayList<ChessMove>) piece.pieceMoves(board, start);
+        for (ChessMove currentMove : moveList) {
+            if (currentMove.getEndPosition().equals(end)) {
+                if (board.getPiece(end) != null) {
+                    board.removePiece(end);
+                }
+                ChessPiece.PieceType promoPieceType = move.getPromotionPiece();
+                if (promoPieceType != null) {
+                    board.addPiece(end, new ChessPiece(color, promoPieceType));
+                    board.removePiece(start);
+                }
+                swapTeamTurn();
+                return;
+            }
+        }
     }
 
     public void makeTestMove(ChessMove move) {
@@ -127,5 +160,19 @@ public class ChessGame {
      */
     public ChessBoard getBoard() {
         return board;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessGame chessGame = (ChessGame) o;
+        return turn == chessGame.turn && Objects.equals(getBoard(), chessGame.getBoard());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(turn, getBoard());
     }
 }
