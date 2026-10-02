@@ -23,7 +23,7 @@ public class ChessGame {
 
     public ChessGame(ChessGame oldGame) {
         turn = oldGame.getTeamTurn();
-        board = oldGame.getBoard();
+        board = new ChessBoard(oldGame.getBoard());
     }
 
     /**
