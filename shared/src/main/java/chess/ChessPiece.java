@@ -1,6 +1,10 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Objects;
+
+import chess.MoveCalculator.*;
 
 /**
  * Represents a single chess piece
@@ -9,8 +13,41 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessPiece {
+    ChessGame.TeamColor pieceColor;
+    ChessPiece.PieceType type;
+    HashMap<ChessPiece.PieceType, String> nameAbbreviations;
+    MoveCalculatorInterface moveCalc;
+
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+        this.pieceColor = pieceColor;
+        this.type = type;
+        if (type == PieceType.BISHOP) {
+            this.moveCalc = new BishopMove();
+        }
+        else if (type == PieceType.ROOK) {
+            this.moveCalc = new RookMove();
+        }
+        else if (type == PieceType.QUEEN) {
+            this.moveCalc = new QueenMove();
+        }
+        else if (type == PieceType.KING) {
+            this.moveCalc = new KingMove();
+        }
+        else if (type == PieceType.KNIGHT) {
+            this.moveCalc = new KnightMove();
+        }
+        else {
+            this.moveCalc = new PawnMove();
+        }
+
+        this.nameAbbreviations = new HashMap<>();
+        nameAbbreviations.put(PieceType.KING, "K");
+        nameAbbreviations.put(PieceType.QUEEN, "Q");
+        nameAbbreviations.put(PieceType.BISHOP, "B");
+        nameAbbreviations.put(PieceType.KNIGHT, "k");
+        nameAbbreviations.put(PieceType.ROOK, "R");
+        nameAbbreviations.put(PieceType.PAWN, "p");
     }
 
     /**
@@ -25,18 +62,19 @@ public class ChessPiece {
         PAWN
     }
 
+
     /**
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
+        return pieceColor;
     }
 
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        throw new RuntimeException("Not implemented");
+        return type;
     }
 
     /**
@@ -47,6 +85,25 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        return moveCalc.getMoves(board, myPosition);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
+    }
+
+    @Override
+    public String toString() {
+        return nameAbbreviations.get(type);
     }
 }
