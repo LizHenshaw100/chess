@@ -42,7 +42,7 @@ public class PawnMove implements MoveCalculatorInterface {
                 moves.add(new ChessMove(pos, new ChessPosition(row + 1, col - 1), null));
             }
             //check first move forward
-            if (row==2 && isEmpty(row + 2, col, board) && isEmpty(row-1, col, board)) {
+            if (row==2 && isEmpty(row + 2, col, board) && isEmpty(row+1, col, board)) {
                 moves.add(new ChessMove(pos, new ChessPosition(row + 2, col), null));
             }
         }

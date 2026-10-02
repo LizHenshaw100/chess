@@ -145,6 +145,7 @@ public class ChessBoard {
             for (int col=1; col<=8; col++) {
                 returnValue += getPiece(new ChessPosition(row, col));
             }
+            returnValue+= "\n";
         }
         return returnValue;
     }
