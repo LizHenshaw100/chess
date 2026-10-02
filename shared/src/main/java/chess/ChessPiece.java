@@ -50,6 +50,11 @@ public class ChessPiece {
         nameAbbreviations.put(PieceType.PAWN, "p");
     }
 
+    public ChessPiece(ChessPiece oldChessPiece) {
+        this.pieceColor = oldChessPiece.getTeamColor();
+        this.type = oldChessPiece.getPieceType();
+    }
+
     /**
      * The various different chess piece options
      */

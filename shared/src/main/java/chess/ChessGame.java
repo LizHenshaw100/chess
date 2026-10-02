@@ -17,6 +17,7 @@ public class ChessGame {
     public ChessGame() {
         turn = TeamColor.WHITE;
         board = new ChessBoard();
+        board.resetBoard();
     }
 
     /**
@@ -89,10 +90,15 @@ public class ChessGame {
                     board.addPiece(end, new ChessPiece(color, promoPieceType));
                     board.removePiece(start);
                 }
+                else {
+                    board.addPiece(end, piece);
+                    board.removePiece(start);
+                }
                 swapTeamTurn();
                 return;
             }
         }
+        throw new InvalidMoveException();
     }
 
     public void makeTestMove(ChessMove move) {

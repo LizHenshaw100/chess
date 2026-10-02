@@ -20,6 +20,24 @@ public class ChessBoard {
         board = new ChessPiece[8][8];
     }
 
+    public ChessBoard(ChessBoard oldBoard) {
+        board = new ChessPiece[8][8];
+
+        for (int i=1; i<9; i++) {
+            for (int j=1; j<9; j++) {
+                copyPieceIfExists(oldBoard, new ChessPosition(i, j));
+            }
+        }
+    }
+
+    public void copyPieceIfExists(ChessBoard oldBoard, ChessPosition position) {
+        ChessPiece oldPiece = oldBoard.getPiece(position);
+        if (oldPiece != null) {
+            ChessPiece pieceCopy = new ChessPiece(oldPiece);
+            addPiece(position, pieceCopy);
+        }
+    }
+
     /**
      * Adds a chess piece to the chessboard
      *
