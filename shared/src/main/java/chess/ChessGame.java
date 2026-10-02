@@ -109,6 +109,9 @@ public class ChessGame {
         if (move.getPromotionPiece() == null) {
             piece = board.getPiece(start);
         }
+        //if (!testMove(move, color)) {
+            //throw new InvalidMoveException();
+        //}
         else {
             piece = new ChessPiece(color, move.getPromotionPiece());
         }
@@ -119,6 +122,8 @@ public class ChessGame {
         board.addPiece(end, piece);
     }
 
+    //public boolean testMove(TeamColor color, ChessPosition position)
+
     /**
      * Determines if the given team is in check
      *
@@ -126,7 +131,8 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+
+        return true;
     }
 
     /**
