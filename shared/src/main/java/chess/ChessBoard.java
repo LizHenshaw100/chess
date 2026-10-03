@@ -90,6 +90,7 @@ public class ChessBoard {
                 blackPieces.remove(position);
             }
         }
+        board[position.getRow()-1][position.getColumn()-1] = null;
     }
 
     /**
@@ -153,7 +154,7 @@ public class ChessBoard {
         }
     }
 
-    public HashMap getPieces(ChessGame.TeamColor color) {
+    public HashMap<ChessPosition, ChessPiece> getPieces(ChessGame.TeamColor color) {
         if (color == WHITE) {
             return whitePieces;
         }
