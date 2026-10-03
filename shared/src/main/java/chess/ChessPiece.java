@@ -53,6 +53,7 @@ public class ChessPiece {
     public ChessPiece(ChessPiece oldChessPiece) {
         this.pieceColor = oldChessPiece.getTeamColor();
         this.type = oldChessPiece.getPieceType();
+        this.moveCalc = oldChessPiece.moveCalc;
     }
 
     /**

@@ -186,7 +186,7 @@ public class ChessGame {
      * @param teamColor which team to check for checkmate
      * @return True if the specified team is in checkmate
      */
-    public boolean isInCheckmate(TeamColor teamColor) throws InvalidMoveException {
+    public boolean isInCheckmate(TeamColor teamColor) {
         return isInCheck(teamColor) && !hasValidMoves(teamColor);
     }
 

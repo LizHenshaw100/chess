@@ -43,12 +43,6 @@ public class ChessBoard {
         if (oldPiece != null) {
             ChessPiece pieceCopy = new ChessPiece(oldPiece);
             addPiece(position, pieceCopy);
-            if (oldPiece.getTeamColor() == WHITE) {
-                whitePieces.put(position, oldPiece);
-            }
-            else {
-                blackPieces.put(position, oldPiece);
-            }
         }
     }
 
@@ -59,6 +53,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
+        removePiece(position);
         board[position.getRow()-1][position.getColumn()-1] = piece;
         if (piece != null){
             if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
@@ -82,7 +77,6 @@ public class ChessBoard {
     }
 
     public void removePiece(ChessPosition position) {
-        addPiece(position, null);
         if (getPiece(position) != null) {
             if (getPiece(position).getTeamColor() == WHITE) {
                 whitePieces.remove(position);
@@ -108,6 +102,10 @@ public class ChessBoard {
                 ChessPiece.PieceType.KNIGHT,
                 ChessPiece.PieceType.ROOK
         };
+
+        board = new ChessPiece[8][8];
+        whitePieces.clear();
+        blackPieces.clear();
 
         ChessPiece piece;
         ChessPosition position;
