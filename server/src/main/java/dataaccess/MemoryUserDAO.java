@@ -4,6 +4,11 @@ import model.UserData;
 
 import java.util.HashMap;
 
-public class MemoryUserDAO {
+public class MemoryUserDAO implements UserDAO {
     HashMap<String, UserData> userDataHashMap = new HashMap<>();
+
+    @Override
+    public void clear() {
+        userDataHashMap.clear();
+    }
 }
