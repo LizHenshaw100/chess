@@ -1,6 +1,7 @@
 package server;
 
 import service.ClearService;
+import io.javalin.http.Context;
 
 public class ClearHandler {
     ClearService clearService;
@@ -8,7 +9,9 @@ public class ClearHandler {
         this.clearService = service;
     }
 
-    public void clear() {
+    public void clear(Context ctx) {
         clearService.clear();
+        ctx.status(200);
+        ctx.result("{}");
     }
 }
