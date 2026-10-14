@@ -1,11 +1,14 @@
 package server;
 
+import com.google.gson.Gson;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import io.javalin.*;
 import service.ClearService;
 import io.javalin.http.Context;
+
+import java.util.Map;
 
 public class Server {
 
@@ -25,9 +28,13 @@ public class Server {
         this.gameDB = new MemoryGameDAO();
         this.userDB = new MemoryUserDAO();
 
-        // Register your endpoints and exception handlers here.
         this.clearService = new ClearService(authDB, gameDB, userDB);
         this.clearHandler = new ClearHandler(clearService);
+
+        // Register your endpoints and exception handlers here.
+        javalin.exception(Exception.class, (e, ctx) -> sendError(ctx, 500, e));
+
+        javalin.delete("/db", clearHandler::clear);
     }
 
     public int run(int desiredPort) {
@@ -35,8 +42,10 @@ public class Server {
         return javalin.port();
     }
 
-    public void clear(Context ctx) {
-        clearHandler.clear(ctx);
+    private void sendError(Context ctx, int status, Exception e) {
+        var body = new Gson().toJson(Map.of("message", "Error: " + e.getMessage()));
+        ctx.status(status);
+        ctx.result(body);
     }
 
     public void stop() {
