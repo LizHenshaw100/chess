@@ -1,5 +1,8 @@
 package server;
 
+import dataaccess.MemoryAuthDAO;
+import dataaccess.MemoryGameDAO;
+import dataaccess.MemoryUserDAO;
 import io.javalin.*;
 
 public class Server {
@@ -8,6 +11,11 @@ public class Server {
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
+
+        //initialize mock dbs when the server starts
+        MemoryAuthDAO authDB = new MemoryAuthDAO();
+        MemoryGameDAO gameDB = new MemoryGameDAO();
+        MemoryUserDAO userDB = new MemoryUserDAO();
 
         // Register your endpoints and exception handlers here.
 
