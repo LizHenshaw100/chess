@@ -11,7 +11,10 @@ public class UserService {
     }
 
     public UserData getUser(String username) {
-        return userDAO.getUser(username);
+        UserData userData = userDAO.getUser(username);
+        if (userData != null) {
+            return throw new
+        }
     }
 
     public void createUser(UserData userData) {

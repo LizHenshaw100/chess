@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.AuthDAO;
+import dataaccess.DataAccessException;
 import model.AuthData;
 
 import java.util.UUID;
@@ -15,7 +16,7 @@ public class AuthService {
         return UUID.randomUUID().toString();
     }
 
-    public String createAuth(String username) {
+    public String createAuth(String username) throws DataAccessException {
         String authToken = generateToken();
         AuthData authData = new AuthData(authToken, username);
         authDAO.addAuth(authData);
