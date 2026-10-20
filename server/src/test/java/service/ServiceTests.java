@@ -9,8 +9,7 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import server.ClearHandler;
 import server.UserHandler;
-import service.RequestResultClasses.RegisterRequest;
-import service.RequestResultClasses.RegisterResult;
+import service.RequestResultClasses.*;
 
 public class ServiceTests {
     MemoryAuthDAO authDB;
@@ -79,4 +78,34 @@ public class ServiceTests {
         Assertions.assertEquals(null, userData);
     }
 
+    /*
+    @Test
+    @DisplayName("Success Login User")
+    public void loginUserTest() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result1 = userService.register(new RegisterRequest(username, password, email));
+        LoginResult result2 = userService.login(new LoginRequest(username, password));
+        Assertions.assertEquals(username, result.username());
+        Assertions.assertNotNull(String.class, result.authToken());
+    }
+    @Test
+    @DisplayName("Unauthorized Login: Wrong password")
+    public void addSameUserTest() throws Exception {
+        String username = "username";
+        String password = "password";
+        LoginResult result1 = userService.login(new LoginRequest(username, password));
+        Assertions.assertThrows(AlreadyTakenException.class, () -> userService.register(new RegisterRequest(username, password, email)));
+    }
+
+    @Test
+    @DisplayName("Unauthorized Login: No Username")
+    public void addBadUserTest() throws Exception {
+        String username = null;
+        String password = "password";
+        String email = "email";
+        Assertions.assertThrows(BadRequestException.class, () -> userService.register(new RegisterRequest(username, password, email)));
+    }
+*/
 }
