@@ -5,6 +5,7 @@ import dataaccess.UserDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.UnauthorizedException;
+import model.AuthData;
 import model.UserData;
 import service.RequestResultClasses.*;
 
@@ -56,7 +57,11 @@ public class UserService {
         return new LoginResult(username, authToken);
     }
 
-    public void logout(LogoutRequest) {
-
+    public void logout(LogoutRequest request) throws Exception{
+        AuthData authData = authService.getAuthData(request.authToken());
+        if (authData == null) {
+            throw new UnauthorizedException("unauthorized");
+        }
+        authService.deleteAuth(request.authToken());
     }
 }
