@@ -1,13 +1,11 @@
 package service;
 
 import dataaccess.GameDAO;
+import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.UnauthorizedException;
 import model.GameData;
-import service.RequestResultClasses.CreateGameRequest;
-import service.RequestResultClasses.CreateGameResult;
-import service.RequestResultClasses.ListGamesRequest;
-import service.RequestResultClasses.ListGamesResult;
+import service.RequestResultClasses.*;
 
 public class GameService {
     AuthService authService;
@@ -33,5 +31,27 @@ public class GameService {
             throw new UnauthorizedException("unauthorized");
         }
         return new ListGamesResult(gameDAO.listGames());
+    }
+
+    public void joinGame(JoinGameRequest request) throws Exception {
+        if (request == null
+                || request.playerColor() == null
+                || !("BLACK".equals(request.playerColor()) ||"WHITE".equals(request.playerColor()))) {
+            throw new BadRequestException("bad request");
+        }
+        if (request.authToken() == null) {
+            throw new UnauthorizedException("unauthorized");
+        }
+        GameData game = gameDAO.getGame(request.gameID());
+        if (game == null) {
+            throw new BadRequestException("bad request");
+        }
+        if ("BLACK".equals(request.playerColor()) && game.blackUsername() != null) {
+            throw new AlreadyTakenException("already taken");
+        }
+        if ("WHITE".equals(request.playerColor()) && game.whiteUsername() != null) {
+            throw new BadRequestException("already taken");
+        }
+        gameDAO.join(authService.getAuthData(request.authToken()).username(), request.playerColor(), request.gameID());
     }
 }

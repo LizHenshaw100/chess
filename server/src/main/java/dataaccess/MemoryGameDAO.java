@@ -25,4 +25,20 @@ public class MemoryGameDAO implements GameDAO{
     public ArrayList<GameData> listGames() {
         return new ArrayList<>(gameDataHashMap.values());
     }
+
+    @Override
+    public GameData getGame(int gameID) {
+        return gameDataHashMap.get(gameID);
+    }
+
+    @Override
+    public void join(String username, String playerColor, int gameID) {
+        GameData old = getGame(gameID);
+        if ("WHITE".equals(playerColor)) {
+            gameDataHashMap.put(gameID, new GameData(gameID, username, old.blackUsername(), old.gameName(), old.game()));
+        }
+        else {
+            gameDataHashMap.put(gameID, new GameData(gameID, old.whiteUsername(), username, old.gameName(), old.game()));
+        }
+    }
 }
