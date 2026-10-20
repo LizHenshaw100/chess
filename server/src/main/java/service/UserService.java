@@ -14,11 +14,8 @@ public class UserService {
         this.authService = authS;
     }
 
-    public void getUser(String username) throws Exception {
-        UserData userData = userDAO.getUser(username);
-        if (userData != null) {
-            throw new AlreadyTakenException("already taken");
-        }
+    public UserData getUser(String username) {
+        return userDAO.getUser(username);
     }
 
     public void createUser(UserData userData) {
@@ -29,7 +26,10 @@ public class UserService {
         if (request.username() == null || request.password() == null || request.email() == null) {
             throw new BadRequestException("bad request");
         }
-        getUser(request.username());
+        UserData userData = getUser(request.username());
+        if (userData != null) {
+            throw new AlreadyTakenException("already taken");
+        }
         createUser(new UserData(request.username(), request.password(), request.email()));
         String token = authService.createAuth(request.username());
         return new RegisterResult(request.username(), token);
