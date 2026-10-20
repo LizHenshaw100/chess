@@ -49,7 +49,7 @@ public class UserService {
             throw new BadRequestException("bad request");
         }
         UserData userData = getUser(username);
-        if (userData == null || userData.password() != password) {
+        if (userData == null || !userData.password().equals(password)) {
             throw new UnauthorizedException("unauthorized");
         }
         String authToken = generateToken(username);
