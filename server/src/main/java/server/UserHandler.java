@@ -3,8 +3,8 @@ package server;
 import com.google.gson.Gson;
 import io.javalin.http.Context;
 import service.UserService;
-import service.RegisterRequest;
-import service.RegisterResult;
+import service.RequestResultClasses.RegisterRequest;
+import service.RequestResultClasses.RegisterResult;
 
 public class UserHandler {
     UserService userService;

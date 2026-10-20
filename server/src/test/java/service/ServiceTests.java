@@ -9,6 +9,8 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import server.ClearHandler;
 import server.UserHandler;
+import service.RequestResultClasses.RegisterRequest;
+import service.RequestResultClasses.RegisterResult;
 
 public class ServiceTests {
     MemoryAuthDAO authDB;
