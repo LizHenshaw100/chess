@@ -4,5 +4,5 @@ import model.GameData;
 
 public interface GameDAO {
     void clear();
-    void addGameData(GameData gameData);
+    int addGameData(GameData gameData);
 }
