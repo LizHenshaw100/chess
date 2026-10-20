@@ -5,6 +5,7 @@ import exception.BadRequestException;
 import exception.UnauthorizedException;
 import model.GameData;
 import service.RequestResultClasses.CreateGameRequest;
+import service.RequestResultClasses.CreateGameResult;
 
 public class GameService {
     AuthService authService;
@@ -14,7 +15,7 @@ public class GameService {
         this.gameDAO = gameDAO1;
     }
 
-    public int createGame(CreateGameRequest request) throws Exception{
+    public CreateGameResult createGame(CreateGameRequest request) throws Exception{
         GameData gameData = request.gameData();
         if (gameData.gameName() == null) {
             throw new BadRequestException("bad request");
@@ -22,6 +23,6 @@ public class GameService {
         if (authService.getAuthData(request.authToken()) == null ) {
             throw new UnauthorizedException("bad request");
         }
-        return gameDAO.addGameData(gameData);
+        return new CreateGameResult(gameDAO.addGameData(gameData));
     }
 }

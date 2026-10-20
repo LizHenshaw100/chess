@@ -8,10 +8,10 @@ import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.UnauthorizedException;
 import io.javalin.*;
-import io.javalin.http.UnauthorizedResponse;
 import service.AuthService;
 import service.ClearService;
 import io.javalin.http.Context;
+import service.GameService;
 import service.UserService;
 
 import java.util.Map;
@@ -26,9 +26,11 @@ public class Server {
     AuthService authService;
     ClearService clearService;
     UserService userService;
+    GameService gameService;
 
     ClearHandler clearHandler;
     UserHandler userHandler;
+    GameHandler gameHandler;
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
@@ -41,9 +43,11 @@ public class Server {
         this.clearService = new ClearService(authDB, gameDB, userDB);
         this.authService = new AuthService(authDB);
         this.userService = new UserService(userDB, authService);
+        this.gameService = new GameService(authService, gameDB);
 
         this.clearHandler = new ClearHandler(clearService);
         this.userHandler = new UserHandler(userService);
+        this.gameHandler = new GameHandler(gameService);
 
         // Register your endpoints and exception handlers here.
         javalin.exception(BadRequestException.class, (e, ctx) -> sendError(ctx, 400, e));
@@ -55,6 +59,7 @@ public class Server {
         javalin.post("/user", userHandler::register);
         javalin.post("/session", userHandler::login);
         javalin.delete("/session", userHandler::logout);
+        javalin.post("/game", gameHandler::createGame);
     }
 
     public int run(int desiredPort) {
