@@ -1,10 +1,7 @@
 package service;
 
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
-import exception.AlreadyTakenException;
-import exception.BadRequestException;
+import dataaccess.*;
+import exception.*;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.ClearHandler;
@@ -78,7 +75,17 @@ public class ServiceTests {
         Assertions.assertEquals(null, userData);
     }
 
-    /*
+    @Test
+    @DisplayName("Success Logout User")
+    public void logoutUserTest() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result1 = userService.register(new RegisterRequest(username, password, email));
+        userService.logout(new LogoutRequest(result1.authToken()));
+        Assertions.assertNull(authService.getAuthData(result1.authToken()));
+    }
+
     @Test
     @DisplayName("Success Login User")
     public void loginUserTest() throws Exception {
@@ -86,26 +93,27 @@ public class ServiceTests {
         String password = "password";
         String email = "email";
         RegisterResult result1 = userService.register(new RegisterRequest(username, password, email));
+        userService.logout(new LogoutRequest(result1.authToken()));
         LoginResult result2 = userService.login(new LoginRequest(username, password));
-        Assertions.assertEquals(username, result.username());
-        Assertions.assertNotNull(String.class, result.authToken());
-    }
-    @Test
-    @DisplayName("Unauthorized Login: Wrong password")
-    public void addSameUserTest() throws Exception {
-        String username = "username";
-        String password = "password";
-        LoginResult result1 = userService.login(new LoginRequest(username, password));
-        Assertions.assertThrows(AlreadyTakenException.class, () -> userService.register(new RegisterRequest(username, password, email)));
+        Assertions.assertEquals(username, result2.username());
+        Assertions.assertNotNull(String.class, result2.authToken());
     }
 
     @Test
-    @DisplayName("Unauthorized Login: No Username")
-    public void addBadUserTest() throws Exception {
-        String username = null;
+    @DisplayName("Unauthorized Login: Wrong password")
+    public void wrongPasswordTest() throws Exception {
+        String username = "username";
         String password = "password";
         String email = "email";
-        Assertions.assertThrows(BadRequestException.class, () -> userService.register(new RegisterRequest(username, password, email)));
+        RegisterResult result1 = userService.register(new RegisterRequest(username, password, email));
+        userService.logout(new LogoutRequest(result1.authToken()));
+        Assertions.assertThrows(UnauthorizedException.class, () -> userService.login(new LoginRequest(username, "Wrong")));
     }
-*/
+    @Test
+    @DisplayName("Unauthorized Login: No Username")
+    public void noUsernameTest() throws Exception {
+        String username = null;
+        String password = "password";
+        Assertions.assertThrows(BadRequestException.class, () -> userService.login(new LoginRequest(username, password)));
+    }
 }
