@@ -55,4 +55,8 @@ public class UserService {
         String authToken = generateToken(username);
         return new LoginResult(username, authToken);
     }
+
+    public void logout(LogoutRequest) {
+
+    }
 }

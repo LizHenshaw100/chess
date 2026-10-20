@@ -22,4 +22,8 @@ public class AuthService {
         authDAO.addAuth(authData);
         return authToken;
     }
+
+    public AuthData getAuthData(String authToken) {
+        return authDAO.getAuth(authToken);
+    }
 }
