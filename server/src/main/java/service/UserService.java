@@ -7,9 +7,11 @@ import model.UserData;
 
 public class UserService {
     UserDAO userDAO;
+    AuthService authService;
 
-    public UserService(UserDAO userDao) {
+    public UserService(UserDAO userDao, AuthService authS) {
         this.userDAO = userDao;
+        this.authService = authS;
     }
 
     public void getUser(String username) throws Exception {
@@ -23,20 +25,13 @@ public class UserService {
         userDAO.addUserData(userData);
     }
 
-    public RegisterResult register(RegisterRequest request) {
+    public RegisterResult register(RegisterRequest request) throws Exception {
         if (request.username() == null || request.password() == null || request.email() == null) {
-            throw new BadRequestException("{"message": "Error: bad request"}")
+            throw new BadRequestException("bad request");
         }
-        try {
-            userService.getUser(username);
-        }
-        catch (Exception e) {
-            ctx.status(403);
-            ctx.result(e.body);
-        }
-        userService.createUser(new UserData(username, password, email));
-        String token = authService.createAuth(username);
-        ctx.status(200);
-        ctx.result(username + token);
+        getUser(request.username());
+        createUser(new UserData(request.username(), request.password(), request.email()));
+        String token = authService.createAuth(request.username());
+        return new RegisterResult(request.username(), token);
     }
 }
