@@ -29,7 +29,7 @@ public class GameService {
     }
 
     public ListGamesResult listGames(ListGamesRequest request) throws Exception {
-        if (authService.getAuthData(request.authToken()) == null ) {
+        if (authService.getAuthData(request.authToken()) == null) {
             throw new UnauthorizedException("unauthorized");
         }
         return new ListGamesResult(gameDAO.listGames());
