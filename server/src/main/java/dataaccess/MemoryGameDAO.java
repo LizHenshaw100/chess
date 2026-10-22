@@ -1,5 +1,6 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.ArrayList;
@@ -15,8 +16,8 @@ public class MemoryGameDAO implements GameDAO{
     }
 
     @Override
-    public int addGameData(GameData gameData) {
-        gameDataHashMap.put(gameNumber, gameData);
+    public int addGameData(String whiteUsername, String blackUsername, String gameName, ChessGame game) {
+        gameDataHashMap.put(gameNumber, new GameData(gameNumber, whiteUsername, blackUsername, gameName, game));
         gameNumber++;
         return gameNumber;
     }

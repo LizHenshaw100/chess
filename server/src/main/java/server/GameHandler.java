@@ -16,7 +16,7 @@ public class GameHandler {
     }
 
     public void createGame(Context ctx) throws Exception {
-        var body = gson.fromJson(ctx.body(), GameData.class);
+        var body = gson.fromJson(ctx.body(), String.class);
         var auth = ctx.header("authorization");
         CreateGameRequest request = new CreateGameRequest(auth, body);
         CreateGameResult result = gameService.createGame(request);
@@ -29,5 +29,14 @@ public class GameHandler {
         ListGamesResult result = gameService.listGames(request);
         ctx.status(200);
         ctx.result(gson.toJson(result));
+    }
+
+    public void joinGame(Context ctx) throws Exception {
+        var body = gson.fromJson(ctx.body(), JoinGameRequest.class);
+        String auth = ctx.header("authorization");
+        JoinGameRequest request = new JoinGameRequest(auth, body.playerColor(), body.gameID());
+        gameService.joinGame(request);
+        ctx.status(200);
+        ctx.result("{}");
     }
 }

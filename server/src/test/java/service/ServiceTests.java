@@ -1,7 +1,9 @@
 package service;
 
+import chess.ChessGame;
 import dataaccess.*;
 import exception.*;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.ClearHandler;
@@ -16,6 +18,7 @@ public class ServiceTests {
     AuthService authService;
     ClearService clearService;
     UserService userService;
+    GameService gameService;
 
     ClearHandler clearHandler;
     UserHandler userHandler;
@@ -29,6 +32,7 @@ public class ServiceTests {
         clearService = new ClearService(authDB, gameDB, userDB);
         authService = new AuthService(authDB);
         userService = new UserService(userDB, authService);
+        gameService = new GameService(authService, gameDB);
 
         clearHandler = new ClearHandler(clearService);
         userHandler = new UserHandler(userService);
@@ -115,5 +119,35 @@ public class ServiceTests {
         String username = null;
         String password = "password";
         Assertions.assertThrows(BadRequestException.class, () -> userService.login(new LoginRequest(username, password)));
+    }
+
+    @Test
+    @DisplayName("Create Game")
+    public void createGameTest() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result1 = userService.register(new RegisterRequest(username, password, email));
+        String authToken = result1.authToken();
+        String gameName = "Test name";
+        gameService.createGame(new CreateGameRequest(authToken, gameName));
+        GameData expected = new GameData(0, null, null, gameName, new ChessGame());
+        Assertions.assertEquals(expected, gameDB.getGame(0));
+    }
+
+    @Test
+    @DisplayName("Bad AuthCreate Game")
+    public void createGameBadAuthTest() throws Exception {
+        String authToken = "bad";
+        String gameName = "Test name";
+        Assertions.assertThrows(UnauthorizedException.class, () -> gameService.createGame(new CreateGameRequest(authToken, gameName)));
+    }
+
+    @Test
+    @DisplayName("Bad AuthCreate Game")
+    public void createGameBadAuthTest() throws Exception {
+        String authToken = "bad";
+        String gameName = "Test name";
+        Assertions.assertThrows(UnauthorizedException.class, () -> gameService.createGame(new CreateGameRequest(authToken, gameName)));
     }
 }

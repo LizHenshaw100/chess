@@ -1,5 +1,6 @@
 package service;
 
+import chess.ChessGame;
 import dataaccess.GameDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
@@ -16,14 +17,14 @@ public class GameService {
     }
 
     public CreateGameResult createGame(CreateGameRequest request) throws Exception{
-        GameData gameData = request.gameData();
-        if (gameData.gameName() == null) {
+        String gameName = request.gameName();
+        if (gameName == null) {
             throw new BadRequestException("bad request");
         }
         if (authService.getAuthData(request.authToken()) == null ) {
             throw new UnauthorizedException("unauthorized");
         }
-        return new CreateGameResult(gameDAO.addGameData(gameData));
+        return new CreateGameResult(gameDAO.addGameData(null, null, gameName, new ChessGame()));
     }
 
     public ListGamesResult listGames(ListGamesRequest request) throws Exception {
@@ -34,13 +35,13 @@ public class GameService {
     }
 
     public void joinGame(JoinGameRequest request) throws Exception {
+        if (request.authToken() == null) {
+            throw new UnauthorizedException("unauthorized");
+        }
         if (request == null
                 || request.playerColor() == null
                 || !("BLACK".equals(request.playerColor()) ||"WHITE".equals(request.playerColor()))) {
             throw new BadRequestException("bad request");
-        }
-        if (request.authToken() == null) {
-            throw new UnauthorizedException("unauthorized");
         }
         GameData game = gameDAO.getGame(request.gameID());
         if (game == null) {
@@ -50,7 +51,7 @@ public class GameService {
             throw new AlreadyTakenException("already taken");
         }
         if ("WHITE".equals(request.playerColor()) && game.whiteUsername() != null) {
-            throw new BadRequestException("already taken");
+            throw new AlreadyTakenException("already taken");
         }
         gameDAO.join(authService.getAuthData(request.authToken()).username(), request.playerColor(), request.gameID());
     }
