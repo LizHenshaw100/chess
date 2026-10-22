@@ -35,7 +35,7 @@ public class GameService {
     }
 
     public void joinGame(JoinGameRequest request) throws Exception {
-        if (request.authToken() == null) {
+        if (authService.getAuthData(request.authToken()) == null) {
             throw new UnauthorizedException("unauthorized");
         }
         if (request == null

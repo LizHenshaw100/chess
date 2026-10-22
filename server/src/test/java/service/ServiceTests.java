@@ -176,11 +176,37 @@ public class ServiceTests {
     }
 
     @Test
-    @DisplayName("Success List Games")
+    @DisplayName("Unauthorized List Games")
     public void unauthorizedListGamesTest() throws Exception {
         String authToken = "bad";
         Assertions.assertThrows(UnauthorizedException.class, () -> gameService.listGames(new ListGamesRequest(authToken)));
     }
 
-    
+    @Test
+    @DisplayName("Success Join Game")
+    public void successJoinGame() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result1 = userService.register(new RegisterRequest(username, password, email));
+        String authToken = result1.authToken();
+        CreateGameRequest request1 = new CreateGameRequest(authToken, "test 1");
+        int gameID1 = gameService.createGame(request1).gameID();
+        gameService.joinGame(new JoinGameRequest(authToken, "WHITE", gameID1));
+        Assertions.assertEquals(username, gameService.getGame(gameID1).whiteUsername());
+    }
+
+    @Test
+    @DisplayName("Unauthorized Join Game")
+    public void unauthorizedJoinGame() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result1 = userService.register(new RegisterRequest(username, password, email));
+        String authToken = result1.authToken();
+        CreateGameRequest request1 = new CreateGameRequest(authToken, "test 1");
+        int gameID1 = gameService.createGame(request1).gameID();
+        String badAuth = "bad";
+        Assertions.assertThrows(UnauthorizedException.class, () -> gameService.joinGame(new JoinGameRequest(badAuth, "WHITE", gameID1)));
+    }
 }
