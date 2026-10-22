@@ -16,9 +16,9 @@ public class GameHandler {
     }
 
     public void createGame(Context ctx) throws Exception {
-        var body = gson.fromJson(ctx.body(), String.class);
+        var body = gson.fromJson(ctx.body(), CreateGameRequest.class);
         var auth = ctx.header("authorization");
-        CreateGameRequest request = new CreateGameRequest(auth, body);
+        CreateGameRequest request = new CreateGameRequest(auth, body.gameName());
         CreateGameResult result = gameService.createGame(request);
         ctx.status(200);
         ctx.result(gson.toJson(result));

@@ -53,7 +53,10 @@ public class Server {
         javalin.exception(BadRequestException.class, (e, ctx) -> sendError(ctx, 400, e));
         javalin.exception(UnauthorizedException.class, (e, ctx) -> sendError(ctx, 401, e));
         javalin.exception(AlreadyTakenException.class, (e, ctx) -> sendError(ctx, 403, e));
-        javalin.exception(Exception.class, (e, ctx) -> sendError(ctx, 500, e));
+        javalin.exception(Exception.class, (e, ctx) -> {
+            e.printStackTrace();
+            sendError(ctx, 500, e);
+        });
 
         javalin.delete("/db", clearHandler::clear);
         javalin.post("/user", userHandler::register);
