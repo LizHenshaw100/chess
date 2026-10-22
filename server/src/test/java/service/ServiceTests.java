@@ -215,4 +215,57 @@ public class ServiceTests {
     public void nullRequestJoinGame() {
         Assertions.assertThrows(BadRequestException.class, () -> gameService.joinGame(null));
     }
+
+    @Test
+    @DisplayName("no color Join Game")
+    public void noColorJoinGame() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result1 = userService.register(new RegisterRequest(username, password, email));
+        String authToken = result1.authToken();
+        CreateGameRequest request1 = new CreateGameRequest(authToken, "test 1");
+        int gameID1 = gameService.createGame(request1).gameID();
+        Assertions.assertThrows(BadRequestException.class, () -> gameService.joinGame(new JoinGameRequest(authToken, null, gameID1)));
+    }
+
+    @Test
+    @DisplayName("black Taken Join Game")
+    public void blackTakenJoinGame() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result = userService.register(new RegisterRequest(username, password, email));
+        String authToken = result.authToken();
+        CreateGameRequest request = new CreateGameRequest(authToken, "test 1");
+        int gameID1 = gameService.createGame(request).gameID();
+        gameService.joinGame(new JoinGameRequest(authToken, "BLACK", gameID1));
+        Assertions.assertThrows(AlreadyTakenException.class, () -> gameService.joinGame(new JoinGameRequest(authToken, "BLACK", gameID1)));
+    }
+
+    @Test
+    @DisplayName("white Taken Join Game")
+    public void whiteTakenJoinGame() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result = userService.register(new RegisterRequest(username, password, email));
+        String authToken = result.authToken();
+        CreateGameRequest request = new CreateGameRequest(authToken, "test 1");
+        int gameID1 = gameService.createGame(request).gameID();
+        gameService.joinGame(new JoinGameRequest(authToken, "WHITE", gameID1));
+        Assertions.assertThrows(AlreadyTakenException.class, () -> gameService.joinGame(new JoinGameRequest(authToken, "WHITE", gameID1)));
+    }
+
+    @Test
+    @DisplayName("null game Join Game")
+    public void nullGameJoinGame() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result = userService.register(new RegisterRequest(username, password, email));
+        String authToken = result.authToken();
+        int gameID1 = 1;
+        Assertions.assertThrows(BadRequestException.class, () -> gameService.joinGame(new JoinGameRequest(authToken, "WHITE", gameID1)));
+    }
 }
