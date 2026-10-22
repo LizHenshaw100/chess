@@ -10,6 +10,9 @@ import server.ClearHandler;
 import server.UserHandler;
 import service.RequestResultClasses.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ServiceTests {
     MemoryAuthDAO authDB;
     MemoryGameDAO gameDB;
@@ -131,8 +134,8 @@ public class ServiceTests {
         String authToken = result1.authToken();
         String gameName = "Test name";
         gameService.createGame(new CreateGameRequest(authToken, gameName));
-        GameData expected = new GameData(0, null, null, gameName, new ChessGame());
-        Assertions.assertEquals(expected, gameDB.getGame(0));
+        GameData expected = new GameData(1, null, null, gameName, new ChessGame());
+        Assertions.assertEquals(expected, gameDB.getGame(1));
     }
 
     @Test
@@ -144,10 +147,40 @@ public class ServiceTests {
     }
 
     @Test
-    @DisplayName("Bad AuthCreate Game")
-    public void createGameBadAuthTest() throws Exception {
-        String authToken = "bad";
-        String gameName = "Test name";
-        Assertions.assertThrows(UnauthorizedException.class, () -> gameService.createGame(new CreateGameRequest(authToken, gameName)));
+    @DisplayName("Bad Name Create Game")
+    public void createGameBadNameTest() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result1 = userService.register(new RegisterRequest(username, password, email));
+        String authToken = result1.authToken();
+        String gameName = null;
+        Assertions.assertThrows(BadRequestException.class, () -> gameService.createGame(new CreateGameRequest(authToken, gameName)));
     }
+
+    @Test
+    @DisplayName("Success List Games")
+    public void successListGamesTest() throws Exception {
+        String username = "username";
+        String password = "password";
+        String email = "email";
+        RegisterResult result1 = userService.register(new RegisterRequest(username, password, email));
+        String authToken = result1.authToken();
+        CreateGameRequest request1 = new CreateGameRequest(authToken, "test 1");
+        int gameID1 = gameService.createGame(request1).gameID();
+        CreateGameRequest request2 = new CreateGameRequest(authToken, "test 2");
+        int gameID2 = gameService.createGame(request2).gameID();
+        ArrayList<GameData> expected = new ArrayList<>(List.of(gameService.getGame(gameID1), gameService.getGame(gameID2)));
+        ArrayList<GameData> actual = gameService.listGames(new ListGamesRequest(authToken)).games();
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Success List Games")
+    public void unauthorizedListGamesTest() throws Exception {
+        String authToken = "bad";
+        Assertions.assertThrows(UnauthorizedException.class, () -> gameService.listGames(new ListGamesRequest(authToken)));
+    }
+
+    
 }

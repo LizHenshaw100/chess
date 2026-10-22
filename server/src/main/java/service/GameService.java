@@ -55,4 +55,8 @@ public class GameService {
         }
         gameDAO.join(authService.getAuthData(request.authToken()).username(), request.playerColor(), request.gameID());
     }
+
+    public GameData getGame(int gameID) {
+        return gameDAO.getGame(gameID);
+    }
 }

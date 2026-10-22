@@ -17,8 +17,8 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public int addGameData(String whiteUsername, String blackUsername, String gameName, ChessGame game) {
-        gameDataHashMap.put(gameNumber, new GameData(gameNumber, whiteUsername, blackUsername, gameName, game));
         gameNumber++;
+        gameDataHashMap.put(gameNumber, new GameData(gameNumber, whiteUsername, blackUsername, gameName, game));
         return gameNumber;
     }
 
