@@ -7,7 +7,7 @@ import exception.BadRequestException;
 import exception.UnauthorizedException;
 import model.AuthData;
 import model.UserData;
-import service.RequestResultClasses.*;
+import service.requestresultclasses.*;
 
 public class UserService {
     UserDAO userDAO;

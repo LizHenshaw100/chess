@@ -8,7 +8,7 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import server.ClearHandler;
 import server.UserHandler;
-import service.RequestResultClasses.*;
+import service.requestresultclasses.*;
 
 import java.util.ArrayList;
 import java.util.List;

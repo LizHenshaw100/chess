@@ -167,7 +167,8 @@ public class ChessBoard {
             return false;
         }
         ChessBoard that = (ChessBoard) o;
-        return Objects.deepEquals(board, that.board) && Objects.equals(whitePieces, that.whitePieces) && Objects.equals(blackPieces, that.blackPieces);
+        return Objects.deepEquals(board, that.board) && Objects.equals(whitePieces, that.whitePieces)
+                && Objects.equals(blackPieces, that.blackPieces);
     }
 
     @Override

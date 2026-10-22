@@ -1,9 +1,8 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
 import io.javalin.http.Context;
-import service.RequestResultClasses.*;
+import service.requestresultclasses.*;
 import service.UserService;
 
 public class UserHandler {

@@ -1,10 +1,8 @@
-package chess.MoveCalculator;
+package chess.movecalculator;
 
 import chess.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PawnMove implements MoveCalculatorInterface {
     public ArrayList<ChessMove> getMoves(ChessBoard board, ChessPosition pos) {
@@ -92,33 +90,5 @@ public class PawnMove implements MoveCalculatorInterface {
         move.add(new ChessMove(pos, position, ChessPiece.PieceType.ROOK));
         move.add(new ChessMove(pos, position, ChessPiece.PieceType.KNIGHT));
         return move;
-    }
-
-    boolean isValidPosition(int row, int col) {
-        return (row >= 1 && row <= 8 && col >= 1 && col <= 8);
-    }
-
-    boolean isFriend(int row, int col, ChessBoard board, ChessGame.TeamColor team) {
-        if (isEmpty(row, col, board)) {
-            return false;
-        }
-        return (board.getPiece(new ChessPosition(row, col)).getTeamColor() == team);
-    }
-
-    boolean isEmpty(int row, int col, ChessBoard board) {
-        if (isValidPosition(row, col)) {
-            return board.getPiece(new ChessPosition(row, col)) == null;
-        }
-        return false;
-    }
-
-    boolean isEnemy(int row, int col, ChessBoard board, ChessGame.TeamColor team) {
-        if (!isValidPosition(row, col)) {
-            return false;
-        }
-        if (isEmpty(row, col, board)) {
-            return false;
-        }
-        return (board.getPiece(new ChessPosition(row, col)).getTeamColor() != team);
     }
 }

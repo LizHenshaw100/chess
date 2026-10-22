@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Objects;
 
-import chess.MoveCalculator.*;
+import chess.movecalculator.*;
 
 /**
  * Represents a single chess piece
