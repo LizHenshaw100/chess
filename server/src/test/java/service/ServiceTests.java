@@ -209,4 +209,10 @@ public class ServiceTests {
         String badAuth = "bad";
         Assertions.assertThrows(UnauthorizedException.class, () -> gameService.joinGame(new JoinGameRequest(badAuth, "WHITE", gameID1)));
     }
+
+    @Test
+    @DisplayName("null request Join Game")
+    public void nullRequestJoinGame() {
+        Assertions.assertThrows(BadRequestException.class, () -> gameService.joinGame(null));
+    }
 }

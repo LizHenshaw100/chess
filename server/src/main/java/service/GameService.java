@@ -35,11 +35,13 @@ public class GameService {
     }
 
     public void joinGame(JoinGameRequest request) throws Exception {
+        if (request == null) {
+            throw new BadRequestException("bad request");
+        }
         if (authService.getAuthData(request.authToken()) == null) {
             throw new UnauthorizedException("unauthorized");
         }
-        if (request == null
-                || request.playerColor() == null
+        if ( request.playerColor() == null
                 || !("BLACK".equals(request.playerColor()) ||"WHITE".equals(request.playerColor()))) {
             throw new BadRequestException("bad request");
         }
