@@ -13,3 +13,5 @@ out/
 server/**/db.properties.idea/dataSources/
 .idea/dataSources/
 server/src/main/resources/db.properties
+.idea/dataSources/
+.idea/dataSources.local.xml
