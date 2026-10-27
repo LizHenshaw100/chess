@@ -44,4 +44,12 @@ public class DatabaseUnitTests {
         UserData expected = userDAO.getUser("user");
         Assertions.assertEquals(expected, testUser);
     }
+
+
+    @Test
+    @DisplayName("Get User Not Found")
+    public void getUserNotFoundTest() throws DataAccessException {
+        UserData expected = userDAO.getUser("user");
+        Assertions.assertNull(expected);
+    }
 }
