@@ -19,11 +19,11 @@ public class UserService {
         this.authService = authS;
     }
 
-    public UserData getUser(String username) {
+    public UserData getUser(String username) throws DataAccessException {
         return userDAO.getUser(username);
     }
 
-    public void createUser(UserData userData) {
+    public void createUser(UserData userData) throws DataAccessException {
         userDAO.addUserData(userData);
     }
 
