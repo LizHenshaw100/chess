@@ -34,4 +34,14 @@ public class DatabaseUnitTests {
         UserData expected = userDAO.getUser("user");
         Assertions.assertEquals(expected, testUser);
     }
+
+    @Test
+    @DisplayName("Get User")
+    public void getUserTest() throws DataAccessException {
+        UserData testUser = new UserData("user", "pass", "email");
+        userDAO.addUserData(testUser);
+
+        UserData expected = userDAO.getUser("user");
+        Assertions.assertEquals(expected, testUser);
+    }
 }
