@@ -1,10 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.DatabaseManager;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
+import dataaccess.*;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.UnauthorizedException;
@@ -20,9 +17,9 @@ import java.util.Map;
 public class Server {
 
     private final Javalin javalin;
-    MemoryAuthDAO authDB;
-    MemoryGameDAO gameDB;
-    MemoryUserDAO userDB;
+    AuthDAO authDB;
+    GameDAO gameDB;
+    UserDAO userDB;
 
     AuthService authService;
     ClearService clearService;
@@ -37,6 +34,14 @@ public class Server {
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
+        //initialize db
+        try {
+            databaseManager.createDatabase();
+            databaseManager.createTables();
+        }
+        catch (DataAccessException e) {
+            throw new RuntimeException("Couldn't initialize db", e);
+        }
 
         //initialize mock dbs when the server starts
         this.authDB = new MemoryAuthDAO();

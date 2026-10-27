@@ -88,7 +88,7 @@ public class DatabaseManager {
         }
     }
 
-    static void createTables() throws DataAccessException {
+    static public void createTables() throws DataAccessException {
         String[] statements = {
             """
             CREATE TABLE IF NOT EXISTS users (
