@@ -7,6 +7,7 @@ import exception.BadRequestException;
 import exception.UnauthorizedException;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import service.requestresultclasses.*;
 
 public class UserService {
@@ -31,14 +32,16 @@ public class UserService {
     }
 
     public RegisterResult register(RegisterRequest request) throws Exception {
-        if (request.username() == null || request.password() == null || request.email() == null) {
+        String password = request.password();
+        if (request.username() == null || password == null || request.email() == null) {
             throw new BadRequestException("bad request");
         }
         UserData userData = getUser(request.username());
         if (userData != null) {
             throw new AlreadyTakenException("already taken");
         }
-        createUser(new UserData(request.username(), request.password(), request.email()));
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        createUser(new UserData(request.username(), hashedPassword, request.email()));
         String token = generateToken(request.username());
         return new RegisterResult(request.username(), token);
     }
@@ -49,8 +52,8 @@ public class UserService {
         if (username == null || password == null) {
             throw new BadRequestException("bad request");
         }
-        UserData userData = getUser(username);
-        if (userData == null || !userData.password().equals(password)) {
+        UserData userData = userDAO.getUser(username);
+        if ((userData == null) || !BCrypt.checkpw(password, getUser(username).password())) {
             throw new UnauthorizedException("unauthorized");
         }
         String authToken = generateToken(username);
