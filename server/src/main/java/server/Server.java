@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.DatabaseManager;
 import dataaccess.MemoryAuthDAO;
 import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
@@ -32,6 +33,8 @@ public class Server {
     UserHandler userHandler;
     GameHandler gameHandler;
 
+    DatabaseManager databaseManager;
+
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
@@ -48,6 +51,8 @@ public class Server {
         this.clearHandler = new ClearHandler(clearService);
         this.userHandler = new UserHandler(userService);
         this.gameHandler = new GameHandler(gameService);
+
+        this.databaseManager = new DatabaseManager();
 
         // Register your endpoints and exception handlers here.
         javalin.exception(BadRequestException.class, (e, ctx) -> sendError(ctx, 400, e));

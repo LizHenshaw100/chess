@@ -24,7 +24,8 @@ public class DatabaseManager {
         try (var conn = DriverManager.getConnection(connectionUrl, dbUsername, dbPassword);
              var preparedStatement = conn.prepareStatement(statement)) {
             preparedStatement.executeUpdate();
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             throw new DataAccessException("failed to create database", ex);
         }
     }
@@ -47,7 +48,8 @@ public class DatabaseManager {
             var conn = DriverManager.getConnection(connectionUrl, dbUsername, dbPassword);
             conn.setCatalog(databaseName);
             return conn;
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             throw new DataAccessException("failed to get connection", ex);
         }
     }
@@ -60,7 +62,8 @@ public class DatabaseManager {
             Properties props = new Properties();
             props.load(propStream);
             loadProperties(props);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             throw new RuntimeException("unable to process db.properties", ex);
         }
     }
@@ -73,5 +76,15 @@ public class DatabaseManager {
         var host = props.getProperty("db.host");
         var port = Integer.parseInt(props.getProperty("db.port"));
         connectionUrl = String.format("jdbc:mysql://%s:%d", host, port);
+    }
+
+    public void example() throws Exception {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var preparedStatement = conn.prepareStatement("SELECT 1+1")) {
+                var rs = preparedStatement.executeQuery();
+                rs.next();
+                System.out.println(rs.getInt(1));
+            }
+        }
     }
 }
