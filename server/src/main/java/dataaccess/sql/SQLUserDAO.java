@@ -40,7 +40,18 @@ public class SQLUserDAO implements UserDAO {
     }
 
     @Override
-    public void addUserData(UserData userData) {
-        // userDataHashMap.put(userData.username(), userData);
+    public void addUserData(UserData userData) throws DataAccessException {
+        String username = userData.username();
+        String password = userData.password();
+        String email = userData.email();
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement("INSERT INTO users (username, password, email) VALUES (?, ?, ?);")) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            preparedStatement.setString(3, email);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("SQL Exception", e);
+        }
     }
 }
