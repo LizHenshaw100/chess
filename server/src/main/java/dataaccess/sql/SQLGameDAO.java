@@ -6,7 +6,6 @@ import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import dataaccess.GameDAO;
 import model.GameData;
-import model.UserData;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -71,7 +70,19 @@ public class SQLGameDAO implements GameDAO {
     }
 
     @Override
-    public void join(String username, String playerColor, int gameID) {
-
+    public void join(String username, String playerColor, int gameID) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection();) {
+            java.sql.PreparedStatement preparedStatement;
+            if (playerColor == "WHITE") {
+                preparedStatement = conn.prepareStatement("UPDATE game SET whiteUsername = ? WHERE gameID = ? VALUES (?, ?);");
+            } else {
+                preparedStatement = conn.prepareStatement("UPDATE game SET blackUsername = ? WHERE gameID = ? VALUES (?, ?);");
+            }
+            preparedStatement.setString(1, username);
+            preparedStatement.setInt(2, gameID);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("SQL Exception", e);
+        }
     }
 }
