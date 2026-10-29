@@ -45,7 +45,7 @@ public class Server {
         }
 
         //initialize daos when the server starts
-        this.authDB = new MemoryAuthDAO();
+        this.authDB = new SQLAuthDAO();
         this.gameDB = new SQLGameDAO();
         this.userDB = new SQLUserDAO();
 

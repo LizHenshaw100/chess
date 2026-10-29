@@ -23,11 +23,11 @@ public class AuthService {
         return authToken;
     }
 
-    public AuthData getAuthData(String authToken) {
+    public AuthData getAuthData(String authToken) throws DataAccessException {
         return authDAO.getAuth(authToken);
     }
 
-    public void deleteAuth(String authToken) {
+    public void deleteAuth(String authToken) throws DataAccessException {
         authDAO.deleteAuth(authToken);
     }
 }
