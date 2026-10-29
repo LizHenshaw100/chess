@@ -9,6 +9,6 @@ public interface GameDAO {
     void clear() throws DataAccessException;
     int addGameData(String whiteUsername, String blackUsername, String gameName, ChessGame game) throws DataAccessException;
     ArrayList<GameData> listGames();
-    GameData getGame(int gameID);
+    GameData getGame(int gameID) throws DataAccessException;
     void join(String username, String playerColor, int gameID);
 }
