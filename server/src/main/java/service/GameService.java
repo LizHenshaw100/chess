@@ -1,6 +1,7 @@
 package service;
 
 import chess.ChessGame;
+import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
@@ -57,7 +58,7 @@ public class GameService {
         gameDAO.join(authService.getAuthData(request.authToken()).username(), request.playerColor(), request.gameID());
     }
 
-    public GameData getGame(int gameID) {
+    public GameData getGame(int gameID) throws DataAccessException {
         return gameDAO.getGame(gameID);
     }
 }

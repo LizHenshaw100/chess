@@ -34,7 +34,9 @@ public class SQLGameDAO implements GameDAO {
             preparedStatement.setString(2, blackUsername);
             preparedStatement.setString(3, gameName);
             preparedStatement.setString(4, gameString);
+            int returnGeneratedKeys = preparedStatement.RETURN_GENERATED_KEYS;
             preparedStatement.executeUpdate();
+            return returnGeneratedKeys;
         } catch (SQLException e) {
             throw new DataAccessException("SQL Exception", e);
         }
@@ -47,24 +49,26 @@ public class SQLGameDAO implements GameDAO {
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-            try (var conn = DatabaseManager.getConnection();
-                 var preparedStatement = conn.prepareStatement("SELECT username, password, email FROM users WHERE username = ?")) {
-                preparedStatement.setString(1, username1);
-                try (var rs = preparedStatement.executeQuery()) {
-                    if (rs.next()) {
-                        String username = rs.getString("username");
-                        String password = rs.getString("password");
-                        String email = rs.getString("email");
-                        ChessGame game = gson.fromJson(json, ChessGame.class);
-                        return new UserData(username, password, email);
-                    }
-                } catch (SQLException e) {
-                    throw new DataAccessException("SQL Exception", e);
+        try (var conn = DatabaseManager.getConnection();
+             var preparedStatement = conn.prepareStatement("SELECT whiteUsername, blackUsername, gameName, game FROM game WHERE gameID = ?")) {
+            preparedStatement.setInt(1, gameID);
+            try (var rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    String whiteUsername = rs.getString("whiteUsername");
+                    String blackUsername = rs.getString("blackUsername");
+                    String gameName = rs.getString("gameName");
+                    String gameString = rs.getString("game");
+                    ChessGame game = gson.fromJson(gameString, ChessGame.class);
+                    return new GameData(gameID, whiteUsername, blackUsername, gameName, game);
                 }
             } catch (SQLException e) {
                 throw new DataAccessException("SQL Exception", e);
             }
-            return null;
+        } catch (SQLException e) {
+            throw new DataAccessException("SQL Exception", e);
+        }
+        return null;
+    }
 
     @Override
     public void join(String username, String playerColor, int gameID) {
