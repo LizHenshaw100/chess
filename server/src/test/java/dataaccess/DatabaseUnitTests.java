@@ -45,7 +45,6 @@ public class DatabaseUnitTests {
         Assertions.assertEquals(expected, testUser);
     }
 
-
     @Test
     @DisplayName("Get User Not Found")
     public void getUserNotFoundTest() throws DataAccessException {
