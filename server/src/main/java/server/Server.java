@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import dataaccess.*;
+import dataaccess.sql.*;
 import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.UnauthorizedException;
@@ -43,10 +44,10 @@ public class Server {
             throw new RuntimeException("Couldn't initialize db", e);
         }
 
-        //initialize mock dbs when the server starts
+        //initialize daos when the server starts
         this.authDB = new MemoryAuthDAO();
-        this.gameDB = new MemoryGameDAO();
-        this.userDB = new MemoryUserDAO();
+        this.gameDB = new SQLGameDAO();
+        this.userDB = new SQLUserDAO();
 
         this.clearService = new ClearService(authDB, gameDB, userDB);
         this.authService = new AuthService(authDB);
