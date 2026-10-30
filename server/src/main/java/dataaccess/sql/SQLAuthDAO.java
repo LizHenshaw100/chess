@@ -1,17 +1,13 @@
 package dataaccess.sql;
 
-import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import model.AuthData;
-import model.UserData;
 
 import java.sql.SQLException;
 
 public class SQLAuthDAO implements AuthDAO {
-    Gson gson = new Gson();
-
     @Override
     public void clear() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection();

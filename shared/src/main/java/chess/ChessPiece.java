@@ -16,7 +16,7 @@ public class ChessPiece {
     ChessGame.TeamColor pieceColor;
     ChessPiece.PieceType type;
     HashMap<ChessPiece.PieceType, String> nameAbbreviations;
-    MoveCalculatorInterface moveCalc;
+    transient MoveCalculatorInterface moveCalc;
 
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {

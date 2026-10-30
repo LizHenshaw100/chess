@@ -2,6 +2,7 @@ package dataaccess.sql;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import dataaccess.GameDAO;
@@ -12,7 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class SQLGameDAO implements GameDAO {
-    Gson gson = new Gson();
+    Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
 
     @Override
     public void clear() throws DataAccessException {
@@ -100,9 +101,9 @@ public class SQLGameDAO implements GameDAO {
     public void join(String username, String playerColor, int gameID) throws DataAccessException {
         String sqlString;
         if ("WHITE".equals(playerColor)) {
-            sqlString = "UPDATE game SET whiteUsername = ? WHERE gameID = ? VALUES (?, ?);";
+            sqlString = "UPDATE game SET whiteUsername = ? WHERE gameID = ?;";
         } else {
-            sqlString = "UPDATE game SET blackUsername = ? WHERE gameID = ? VALUES (?, ?);";
+            sqlString = "UPDATE game SET blackUsername = ? WHERE gameID = ?;";
         }
         try (var conn = DatabaseManager.getConnection();
              var preparedStatement = conn.prepareStatement(sqlString)) {
