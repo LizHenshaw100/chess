@@ -1,9 +1,11 @@
 package dataaccess;
 
+import chess.ChessGame;
 import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
 import dataaccess.sql.SQLUserDAO;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.AuthService;
 import service.UserService;
+
+import java.util.ArrayList;
 
 
 public class DatabaseUnitTests {
@@ -105,5 +109,39 @@ public class DatabaseUnitTests {
         authDAO.addAuth(new AuthData("Auth", "name"));
         authDAO.deleteAuth("Auth");
         Assertions.assertNull(authDAO.getAuth("Auth"));
+    }
+
+    @Test
+    @DisplayName("Add Game Data")
+    public void addGameData() throws Exception {
+        int id = gameDAO.addGameData(null, "Player1", "Test Game", new ChessGame());
+        Assertions.assertEquals(gameDAO.getGame(id), new GameData(id, null, "Player1", "Test Game", new ChessGame()));
+    }
+
+    @Test
+    @DisplayName("List Games")
+    public void listGames() throws Exception {
+        int id1 = gameDAO.addGameData(null, "Player1", "Test Game", new ChessGame());
+        int id2 = gameDAO.addGameData("Player4", null, "Test Game", new ChessGame());
+        ArrayList<GameData> games = new ArrayList<>();
+        games.add(gameDAO.getGame(id1));
+        games.add(gameDAO.getGame(id2));
+        Assertions.assertEquals(games, gameDAO.listGames());
+    }
+
+    @Test
+    @DisplayName("Join Game White")
+    public void joinGame() throws Exception {
+        int id1 = gameDAO.addGameData(null, "Player1", "Test Game", new ChessGame());
+        gameDAO.join("white", "WHITE", id1);
+        Assertions.assertEquals("white", gameDAO.getGame(id1).whiteUsername());
+    }
+
+    @Test
+    @DisplayName("Join Game Black")
+    public void joinGameBlack() throws Exception {
+        int id1 = gameDAO.addGameData(null, null, "Test Game", new ChessGame());
+        gameDAO.join("white", "BLACK", id1);
+        Assertions.assertEquals("white", gameDAO.getGame(id1).blackUsername());
     }
 }
