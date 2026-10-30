@@ -30,7 +30,9 @@ public class SQLGameDAO implements GameDAO {
         String gameString = gson.toJson(game);
 
         try (var conn = DatabaseManager.getConnection();
-             var preparedStatement = conn.prepareStatement("INSERT INTO game (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
+             var preparedStatement =
+                     conn.prepareStatement("INSERT INTO game (whiteUsername, blackUsername, gameName, game) " +
+                             "VALUES (?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, whiteUsername);
             preparedStatement.setString(2, blackUsername);
             preparedStatement.setString(3, gameName);

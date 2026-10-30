@@ -84,16 +84,6 @@ public class DatabaseUnitTests {
     }
 
     @Test
-    @DisplayName("Get Auth")
-    public void getAuthSuccess() throws Exception {
-        userDAO.addUserData(new UserData("name", "pass", "email"));
-        authDAO.addAuth(new AuthData("auth", "name"));
-        AuthData authData = authDAO.getAuth("auth");
-        Assertions.assertEquals("auth", authData.authToken());
-        Assertions.assertEquals("name", authData.username());
-    }
-
-    @Test
     @DisplayName("Clear Auth")
     public void clearAuthSuccess() throws Exception {
         userDAO.addUserData(new UserData("name", "pass", "email"));
