@@ -50,7 +50,7 @@ public class ChessClient {
 
     public String login(String... params) throws ResponseExcpetion {
         if (params.length >= 1) {
-            
+
         }
     }
 
@@ -110,23 +110,11 @@ public class ChessClient {
         if (params.length >= 1) {
             state = State.SIGNEDIN;
             visitorName = String.join("-", params);
-            ws.enterPetShop(visitorName);
             return String.format("You signed in as %s.", visitorName);
         }
-        throw new ResponseException(ResponseException.Code.ClientError, "Expected: <yourname>");
+        throw new ResponseException(400, "Expected: <yourname>");
     }
 
-    public String rescuePet(String... params) throws ResponseException {
-        assertSignedIn();
-        if (params.length >= 2) {
-            String name = params[0];
-            PetType type = PetType.valueOf(params[1].toUpperCase());
-            var pet = new Pet(0, name, type);
-            pet = server.addPet(pet);
-            return String.format("You rescued %s. Assigned ID: %d", pet.name(), pet.id());
-        }
-        throw new ResponseException(ResponseException.Code.ClientError, "Expected: <name> <CAT|DOG|FROG>");
-    }
 
     public String listPets() throws ResponseException {
         assertSignedIn();
@@ -155,24 +143,6 @@ public class ChessClient {
         throw new ResponseException(ResponseException.Code.ClientError, "Expected: <pet id>");
     }
 
-    public String adoptAllPets() throws ResponseException {
-        assertSignedIn();
-        var buffer = new StringBuilder();
-        for (Pet pet : server.listPets()) {
-            buffer.append(String.format("%s says %s%n", pet.name(), pet.sound()));
-        }
-
-        server.deleteAllPets();
-        return buffer.toString();
-    }
-
-    public String signOut() throws ResponseException {
-        assertSignedIn();
-        ws.leavePetShop(visitorName);
-        state = State.SIGNEDOUT;
-        return String.format("%s left the shop", visitorName);
-    }
-
     private Pet getPet(int id) throws ResponseException {
         for (Pet pet : server.listPets()) {
             if (pet.id() == id) {
@@ -185,17 +155,20 @@ public class ChessClient {
     public String help() {
         if (state == State.SIGNEDOUT) {
             return """
-                    - signIn <yourname>
-                    - quit
+                    - help - with possible commands
+                    - quit - playing chess
+                    - login <USERNAME> <PASSWORD> - to play chess
+                    - register <USERNAME> <PASSWORD> <EMAIL> - to create an account
                     """;
         }
         return """
-                - list
-                - adopt <pet id>
-                - rescue <name> <CAT|DOG|FROG|FISH>
-                - adoptAll
-                - signOut
-                - quit
+                - create <NAME> - a game
+                - list - games
+                - join <ID> [BLACK|WHITE] - a game
+                - observe <ID> - a game
+                - logout - when you are done
+                - quit - playing chess
+                - help - with possible commands
                 """;
     }
 
