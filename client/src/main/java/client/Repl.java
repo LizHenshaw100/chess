@@ -8,7 +8,7 @@ import static java.awt.Color.RED;
 public class Repl {
     private final ChessClient client;
 
-    public Repl(String serverUrl) {
+    public Repl(String serverUrl) throws Exception {
         client = new ChessClient(serverUrl, this);
         client.run();
     }
@@ -20,7 +20,7 @@ public class Repl {
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("quit") && !result.equals("q")) {
-            printPrompt();
+            //printPrompt();
             String line = scanner.nextLine();
 
             try {

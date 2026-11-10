@@ -29,6 +29,8 @@ public class ChessClient {
     }
 
     public String eval(String input) {
+        return help();
+        /*
         try {
             var tokens = input.toLowerCase().split("");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
@@ -47,16 +49,18 @@ public class ChessClient {
         } catch (Exception ex) {
             return ex.getMessage();
         }
-    }
 
+         */
+    }
+/*
     public String login(String... params) throws Exception {
         if (params.length >= 1) {
 
         }
-    }
+    }*/
 
     public void run() {
-        System.out.println(LOGO + " Welcome to the pet store. Sign in to start.");
+        System.out.println(" Welcome to the pet store. Sign in to start.");
         System.out.print(help());
 
         Scanner scanner = new Scanner(System.in);
@@ -67,7 +71,7 @@ public class ChessClient {
 
             try {
                 result = eval(line);
-                System.out.print(BLUE + result);
+                System.out.print(result);
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
@@ -77,29 +81,9 @@ public class ChessClient {
     }
 
     private void printPrompt() {
-        System.out.print("\n" + RESET + ">>> " + GREEN);
+        System.out.print("\n" + ">>> ");
     }
 
-
-    public String eval(String input) {
-        try {
-            String[] tokens = input.toLowerCase().split(" ");
-            String cmd = (tokens.length > 0) ? tokens[0] : "help";
-            String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
-            return switch (cmd) {
-                case "signin" -> signIn(params);
-                case "rescue" -> rescuePet(params);
-                case "list" -> listPets();
-                case "signout" -> signOut();
-                case "adopt" -> adoptPet(params);
-                case "adoptall" -> adoptAllPets();
-                case "quit" -> "quit";
-                default -> help();
-            };
-        } catch (Exception ex) {
-            return ex.getMessage();
-        }
-    }
 
     public String help() {
         if (state == State.SIGNEDOUT) {

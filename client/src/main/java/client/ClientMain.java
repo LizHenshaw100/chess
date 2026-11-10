@@ -11,6 +11,10 @@ public class ClientMain {
             serverUrl = args[0];
         }
 
-        new Repl(serverUrl).run();
+        try {
+            new Repl(serverUrl).run();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
