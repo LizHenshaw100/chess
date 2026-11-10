@@ -22,18 +22,39 @@ public class ServerFacade {
         var response = sendRequest(request1);
         return handleResponse(response, RegisterResult.class);
     };
-/*
-    public LoginResult login(LoginRequest request) {  };
 
-    public void logout(LogoutRequest request) {  };
+    public LoginResult login(LoginRequest request) throws Exception {
+        var request1 = buildRequest("POST", "/session", request);
+        var response = sendRequest(request1);
+        return handleResponse(response, LoginResult.class);
+    };
 
-    public ListGamesResult listGames(ListGamesRequest request) {  };
+    public void logout(LogoutRequest request) throws Exception {
+        var request1 = buildRequest("DELETE", "/session", request);
+        sendRequest(request1);
+    };
 
-    public void clear() {  };
+    public ListGamesResult listGames(ListGamesRequest request) throws Exception {
+        var request1 = buildRequest("GET", "/game", request);
+        var response = sendRequest(request1);
+        return handleResponse(response, ListGamesResult.class);
+    };
 
-    public CreateGameResult createGame(CreateGameRequest request) {  };
+    public void clear() throws Exception {
+        var request1 = buildRequest("DELETE", "/db", null);
+        sendRequest(request1);
+    };
 
-    public void joinGame(JoinGameRequest request) {  }; */
+    public CreateGameResult createGame(CreateGameRequest request) throws Exception {
+        var request1 = buildRequest("POST", "/game", request);
+        var response = sendRequest(request1);
+        return handleResponse(response, CreateGameResult.class);
+    };
+
+    public void joinGame(JoinGameRequest request) throws Exception {
+        var request1 = buildRequest("PUT", "/game", request);
+        sendRequest(request1);
+    };
 
     private HttpRequest buildRequest(String method, String path, Object body) {
         var request = HttpRequest.newBuilder()

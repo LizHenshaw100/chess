@@ -36,8 +36,8 @@ public class ChessClient {
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
                 case "register" -> register(params);
-                /*case "login" -> serverFacade.login(params);
-                case "logout" -> serverFacade.logout();
+                case "login" -> login(params);
+                /*case "logout" -> serverFacade.logout();
                 case "creategame" -> serverFacade.createGame(params);
                 case "listgames" -> serverFacade.listGames(params);
                 case "playgame" -> serverFacade.playGame(params);
@@ -50,6 +50,9 @@ public class ChessClient {
     }
 
     public String register(String... params) throws Exception {
+        if (state==State.SIGNEDIN) {
+            throw new Exception("You don't need to create an account, you're already signed in!");
+        }
         if (params.length != 3) {
             throw new Exception("Incorrect number of parameters, expected 3");
         }
@@ -57,6 +60,24 @@ public class ChessClient {
         serverFacade.register(request);
         state = State.SIGNEDIN;
         return "You have successfully registered and have been logged in!";
+    }
+
+    public String login(String... params) throws Exception {
+        if (state==State.SIGNEDIN) {
+            throw new Exception("You don't need to login, you're already signed in!");
+        }
+        if (params.length != 2) {
+            throw new Exception("Incorrect number of parameters, expected 2");
+        }
+        try {
+            LoginRequest request = new LoginRequest(params[0], params[1]);
+            LoginResult result = serverFacade.login(request);
+            return "Welcome back " + result.username();
+        }
+        catch(Exception e) {
+            throw new Exception("Incorrect username or password");
+        }
+
     }
 
     public String help() {
