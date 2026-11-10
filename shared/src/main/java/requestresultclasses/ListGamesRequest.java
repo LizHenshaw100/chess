@@ -1,3 +1,3 @@
-package service.requestresultclasses;
+package requestresultclasses;
 
 public record ListGamesRequest(String authToken) { }

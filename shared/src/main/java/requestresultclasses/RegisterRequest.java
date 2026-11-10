@@ -1,3 +1,3 @@
-package service.requestresultclasses;
+package requestresultclasses;
 
 public record RegisterRequest(String username, String password, String email){ }

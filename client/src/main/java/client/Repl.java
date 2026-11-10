@@ -2,11 +2,15 @@ package client;
 
 import java.util.Scanner;
 
+import static java.awt.Color.BLUE;
+import static java.awt.Color.RED;
+
 public class Repl {
     private final ChessClient client;
 
     public Repl(String serverUrl) {
         client = new ChessClient(serverUrl, this);
+        client.run();
     }
 
     public void run() {
@@ -29,11 +33,5 @@ public class Repl {
         }
         System.out.println();
     }
-
-    public void notify(Notification notification) {
-        System.out.println(RED + notification.message());
-        printPrompt();
-    }
-
 
 }

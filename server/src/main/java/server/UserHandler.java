@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import io.javalin.http.Context;
+import requestresultclasses.*;
 import service.requestresultclasses.*;
 import service.UserService;
 

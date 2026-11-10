@@ -7,6 +7,7 @@ import exception.AlreadyTakenException;
 import exception.BadRequestException;
 import exception.UnauthorizedException;
 import model.GameData;
+import requestresultclasses.*;
 import service.requestresultclasses.*;
 
 public class GameService {

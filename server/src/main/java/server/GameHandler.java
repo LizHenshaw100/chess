@@ -2,8 +2,8 @@ package server;
 
 import com.google.gson.Gson;
 import io.javalin.http.Context;
+import requestresultclasses.*;
 import service.GameService;
-import service.requestresultclasses.*;
 
 public class GameHandler {
     GameService gameService;
