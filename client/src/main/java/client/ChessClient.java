@@ -18,6 +18,7 @@ import static client.EscapeSequences.*;
 
 public class ChessClient {
     private String visitorName = null;
+    private String auth = null;
     private final ServerFacade serverFacade;
     private final String serverUrl;
     private State state = State.SIGNEDOUT;
@@ -37,8 +38,8 @@ public class ChessClient {
             return switch (cmd) {
                 case "register" -> register(params);
                 case "login" -> login(params);
-                /*case "logout" -> serverFacade.logout();
-                case "creategame" -> serverFacade.createGame(params);
+                case "logout" -> logout();
+                /*case "creategame" -> serverFacade.createGame(params);
                 case "listgames" -> serverFacade.listGames(params);
                 case "playgame" -> serverFacade.playGame(params);
                 case "observegame" -> serverFacade.observeGame(params);*/
@@ -57,8 +58,10 @@ public class ChessClient {
             throw new Exception("Incorrect number of parameters, expected 3");
         }
         RegisterRequest request = new RegisterRequest(params[0], params[1], params[2]);
-        serverFacade.register(request);
+        RegisterResult result = serverFacade.register(request);
         state = State.SIGNEDIN;
+        visitorName = params[0];
+        auth = result.authToken();
         return "You have successfully registered and have been logged in!";
     }
 
@@ -72,12 +75,27 @@ public class ChessClient {
         try {
             LoginRequest request = new LoginRequest(params[0], params[1]);
             LoginResult result = serverFacade.login(request);
-            return "Welcome back " + result.username();
+            visitorName = result.username();
+            auth = result.authToken();
+            state = State.SIGNEDIN;
+            System.out.println("Auth: " + auth);
+            return "Welcome back " + visitorName;
         }
         catch(Exception e) {
             throw new Exception("Incorrect username or password");
         }
+    }
 
+    public String logout() throws Exception{
+        if (state==State.SIGNEDOUT) {
+            throw new Exception("You can't log out when you're not signed in silly");
+        }
+        LogoutRequest request = new LogoutRequest(auth);
+        serverFacade.logout(request);
+        auth = null;
+        visitorName = null;
+        state = State.SIGNEDOUT;
+        return "Thanks for playing!";
     }
 
     public String help() {

@@ -6,9 +6,9 @@ import exception.*;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
+import requestresultclasses.*;
 import server.ClearHandler;
 import server.UserHandler;
-import service.requestresultclasses.*;
 
 import java.util.ArrayList;
 import java.util.List;
