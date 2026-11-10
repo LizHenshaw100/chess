@@ -39,8 +39,8 @@ public class ChessClient {
                 case "register" -> register(params);
                 case "login" -> login(params);
                 case "logout" -> logout();
-                /*case "creategame" -> serverFacade.createGame(params);
-                case "listgames" -> serverFacade.listGames(params);
+                case "create" -> createGame(params);
+                /*case "list" -> serverFacade.listGames(params);
                 case "playgame" -> serverFacade.playGame(params);
                 case "observegame" -> serverFacade.observeGame(params);*/
                 default -> help();
@@ -96,6 +96,18 @@ public class ChessClient {
         visitorName = null;
         state = State.SIGNEDOUT;
         return "Thanks for playing!";
+    }
+
+    public String createGame(String... params) throws Exception{
+        if (state==State.SIGNEDOUT) {
+            throw new Exception("You can't log out when you're not signed in silly");
+        }
+        if(params.length != 1) {
+            throw new Exception("Expected 1 parameter. Try again with just the command create and the the name of the game (no white space)");
+        }
+        CreateGameRequest request = new CreateGameRequest(auth, params[0]);
+        CreateGameResult result = serverFacade.createGame(request, auth);
+        return "You have successfully created a game with id " + result.gameID();
     }
 
     public String help() {

@@ -76,6 +76,16 @@ public class Server {
         javalin.post("/game", gameHandler::createGame);
         javalin.get("/game", gameHandler::listGames);
         javalin.put("/game", gameHandler::joinGame);
+
+        try {
+            authDB.clear();
+            gameDB.clear();
+            userDB.clear();
+        }
+        catch (DataAccessException e) {
+            System.out.println(e);
+        }
+
     }
 
     public int run(int desiredPort) {
