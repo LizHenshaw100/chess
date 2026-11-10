@@ -140,6 +140,30 @@ public class ChessClient {
         return returnString ;
     }
 
+    public String join(String... params) throws Exception{
+        if (params.length != 2) {
+            throw new Exception("Incorrect number of parameters. Expected: ID BLACK|WHITE");
+        }
+        if (!params[1].equals("white") && !params[1].equals("black")) {
+            throw new Exception(params[1] + " is not a color. Please try again with WHITE or BLACK");
+        }
+        try {
+            int gameID = Integer.parseInt(params[0]);
+            JoinGameRequest request = new JoinGameRequest(auth, params[1], gameID);
+            serverFacade.joinGame(request, auth);
+            if (params[1].equals("white")) {
+                return "White Board";
+            }
+            if (params[1].equals("black")) {
+                return "Black Board";
+            }
+        }
+        catch (NumberFormatException e) {
+            throw new Exception(params[0] + " is not a number. Please enter a valid game id");
+        }
+        return "Error";
+    }
+
     public String help() {
         if (state == State.SIGNEDOUT) {
             return """
