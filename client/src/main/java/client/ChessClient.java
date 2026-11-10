@@ -1,6 +1,7 @@
 package client;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 import requestresultclasses.*;
 
@@ -40,9 +41,9 @@ public class ChessClient {
                 case "login" -> login(params);
                 case "logout" -> logout();
                 case "create" -> createGame(params);
-                /*case "list" -> serverFacade.listGames(params);
-                case "playgame" -> serverFacade.playGame(params);
-                case "observegame" -> serverFacade.observeGame(params);*/
+                case "list" -> listGames();
+                case "join" -> join(params);
+                //case "observe" -> serverFacade.observeGame(params);
                 default -> help();
             };
         } catch (Exception ex) {
@@ -108,6 +109,35 @@ public class ChessClient {
         CreateGameRequest request = new CreateGameRequest(auth, params[0]);
         CreateGameResult result = serverFacade.createGame(request, auth);
         return "You have successfully created a game with id " + result.gameID();
+    }
+
+    public String listGames() throws Exception{
+        if (state!=State.SIGNEDIN) {
+            throw new Exception("Sign in first!");
+        }
+        ListGamesResult result = serverFacade.listGames(auth);
+        Collection<GameSummary> games = result.games();
+        if (games==null || games.isEmpty()) {
+            return "Sorry, there are no games currently. Use create to make one";
+        }
+        String returnString = "";
+        for (GameSummary game : games) {
+            returnString = returnString + "\n" + game.gameName() + ": " + game.gameID() + "\n";
+            if (game.whiteUsername() != null) {
+                returnString = returnString + "white: " + game.whiteUsername();
+            }
+            else {
+                returnString = returnString + "white: AVAILABLE";
+            }
+            if (game.blackUsername()!=null) {
+                returnString = returnString + "\nblack: " + game.blackUsername();
+            }
+            else {
+                returnString = returnString + "\nblack: AVAILABLE";
+            }
+            returnString = returnString + "\n";
+        }
+        return returnString ;
     }
 
     public String help() {

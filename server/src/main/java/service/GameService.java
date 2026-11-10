@@ -9,6 +9,8 @@ import exception.UnauthorizedException;
 import model.GameData;
 import requestresultclasses.*;
 
+import java.util.ArrayList;
+
 public class GameService {
     AuthService authService;
     GameDAO gameDAO;
@@ -32,7 +34,12 @@ public class GameService {
         if (authService.getAuthData(request.authToken()) == null) {
             throw new UnauthorizedException("unauthorized");
         }
-        return new ListGamesResult(gameDAO.listGames());
+        ArrayList<GameData> gameDataArray = gameDAO.listGames();
+        ArrayList<GameSummary> gameSummaryArray = new ArrayList<>();
+        for (GameData gameData : gameDataArray) {
+            gameSummaryArray.add(new GameSummary(gameData.gameID(), gameData.gameName(), gameData.whiteUsername(), gameData.blackUsername()));
+        }
+        return new ListGamesResult(gameSummaryArray);
     }
 
     public void joinGame(JoinGameRequest request) throws Exception {
