@@ -1,7 +1,8 @@
 package client;
 
 import java.util.Arrays;
-import java.util.Scanner;
+
+import requestresultclasses.*;
 
 import com.google.gson.Gson;
 
@@ -30,12 +31,12 @@ public class ChessClient {
 
     public String eval(String input) {
         try {
-            var tokens = input.toLowerCase().split("");
+            var tokens = input.toLowerCase().split("\\s");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
+                case "register" -> register(params);
                 /*case "login" -> serverFacade.login(params);
-                case "register" -> serverFacade.register(params);
                 case "logout" -> serverFacade.logout();
                 case "creategame" -> serverFacade.createGame(params);
                 case "listgames" -> serverFacade.listGames(params);
@@ -47,12 +48,16 @@ public class ChessClient {
             return ex.getMessage();
         }
     }
-/*
-    public String login(String... params) throws Exception {
-        if (params.length >= 1) {
 
+    public String register(String... params) throws Exception {
+        if (params.length != 3) {
+            throw new Exception("Incorrect number of parameters, expected 3");
         }
-    }*/
+        RegisterRequest request = new RegisterRequest(params[0], params[1], params[2]);
+        serverFacade.register(request);
+        state = State.SIGNEDIN;
+        return "You have successfully registered and have been logged in!";
+    }
 
     public String help() {
         if (state == State.SIGNEDOUT) {

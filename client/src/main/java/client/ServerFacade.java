@@ -18,7 +18,7 @@ public class ServerFacade {
     }
 
     public RegisterResult register(RegisterRequest request) throws Exception {
-        var request1 = buildRequest("POST", "/register", request);
+        var request1 = buildRequest("POST", "/user", request);
         var response = sendRequest(request1);
         return handleResponse(response, RegisterResult.class);
     };

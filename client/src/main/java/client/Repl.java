@@ -22,7 +22,7 @@ public class Repl {
         while (!result.equals("quit") && !result.equals("q")) {
             try {
                 result = client.eval(result);
-                System.out.print(BLUE + result);
+                System.out.print(result);
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
