@@ -10,7 +10,6 @@ public class Repl {
 
     public Repl(String serverUrl) throws Exception {
         client = new ChessClient(serverUrl, this);
-        client.run();
     }
 
     public void run() {
@@ -18,20 +17,24 @@ public class Repl {
         System.out.println(client.help());
 
         Scanner scanner = new Scanner(System.in);
-        var result = "";
+        printPrompt();
+        var result = scanner.nextLine();
         while (!result.equals("quit") && !result.equals("q")) {
-            //printPrompt();
-            String line = scanner.nextLine();
-
             try {
-                result = client.eval(line);
+                result = client.eval(result);
                 System.out.print(BLUE + result);
             } catch (Throwable e) {
                 var msg = e.toString();
                 System.out.print(msg);
             }
+            printPrompt();
+            result = scanner.nextLine();
         }
         System.out.println();
+    }
+
+    private void printPrompt() {
+        System.out.print("\n" + ">>> ");
     }
 
 }

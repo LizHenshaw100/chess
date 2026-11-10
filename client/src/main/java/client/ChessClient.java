@@ -29,28 +29,23 @@ public class ChessClient {
     }
 
     public String eval(String input) {
-        return help();
-        /*
         try {
             var tokens = input.toLowerCase().split("");
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                case "quit" -> serverFacade.quit();
-                case "login" -> serverFacade.login(params);
+                /*case "login" -> serverFacade.login(params);
                 case "register" -> serverFacade.register(params);
                 case "logout" -> serverFacade.logout();
                 case "creategame" -> serverFacade.createGame(params);
                 case "listgames" -> serverFacade.listGames(params);
                 case "playgame" -> serverFacade.playGame(params);
-                case "observegame" -> serverFacade.observeGame(params);
+                case "observegame" -> serverFacade.observeGame(params);*/
                 default -> help();
             };
         } catch (Exception ex) {
             return ex.getMessage();
         }
-
-         */
     }
 /*
     public String login(String... params) throws Exception {
@@ -58,32 +53,6 @@ public class ChessClient {
 
         }
     }*/
-
-    public void run() {
-        System.out.println(" Welcome to the pet store. Sign in to start.");
-        System.out.print(help());
-
-        Scanner scanner = new Scanner(System.in);
-        var result = "";
-        while (!result.equals("quit")) {
-            printPrompt();
-            String line = scanner.nextLine();
-
-            try {
-                result = eval(line);
-                System.out.print(result);
-            } catch (Throwable e) {
-                var msg = e.toString();
-                System.out.print(msg);
-            }
-        }
-        System.out.println();
-    }
-
-    private void printPrompt() {
-        System.out.print("\n" + ">>> ");
-    }
-
 
     public String help() {
         if (state == State.SIGNEDOUT) {
