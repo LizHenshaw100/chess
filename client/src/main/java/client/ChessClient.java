@@ -17,14 +17,15 @@ import static client.EscapeSequences.*;
 
 public class ChessClient {
     private String visitorName = null;
-    private final ServerFacade server;
+    private final ServerFacade serverFacade;
     private final String serverUrl;
     private State state = State.SIGNEDOUT;
+    private Repl repl;
 
-    public PetClient(String serverUrl, NotificationHandler notificationHandler) throws ResponseException {
-        server = new ServerFacade(serverUrl);
-        this.serverURl = serverUrl;
-        this.notificationHandler = notificationHandler;
+    public ChessClient(String serverUrl, Repl repl) throws Exception {
+        serverFacade = new ServerFacade(serverUrl);
+        this.serverUrl = serverUrl;
+        this.repl = repl;
     }
 
     public String eval(String input) {
@@ -33,22 +34,22 @@ public class ChessClient {
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
-                case "quit" -> quit();
-                case "login" -> login(params);
-                case "register" -> register(params);
-                case "logout" -> logout();
-                case "creategame" -> createGame(params);
-                case "listgames" -> listGames(params);
-                case "playgame" -> playGame(params);
-                case "observegame" -> observeGame(params);
+                case "quit" -> serverFacade.quit();
+                case "login" -> serverFacade.login(params);
+                case "register" -> serverFacade.register(params);
+                case "logout" -> serverFacade.logout();
+                case "creategame" -> serverFacade.createGame(params);
+                case "listgames" -> serverFacade.listGames(params);
+                case "playgame" -> serverFacade.playGame(params);
+                case "observegame" -> serverFacade.observeGame(params);
                 default -> help();
             };
-        } catch (ResponseException ex) {
+        } catch (Exception ex) {
             return ex.getMessage();
         }
     }
 
-    public String login(String... params) throws ResponseExcpetion {
+    public String login(String... params) throws Exception {
         if (params.length >= 1) {
 
         }
@@ -75,12 +76,6 @@ public class ChessClient {
         System.out.println();
     }
 
-
-    public void notify(Notification notification) {
-        System.out.println(RED + notification.message());
-        printPrompt();
-    }
-
     private void printPrompt() {
         System.out.print("\n" + RESET + ">>> " + GREEN);
     }
@@ -101,55 +96,9 @@ public class ChessClient {
                 case "quit" -> "quit";
                 default -> help();
             };
-        } catch (ResponseException ex) {
+        } catch (Exception ex) {
             return ex.getMessage();
         }
-    }
-
-    public String signIn(String... params) throws ResponseException {
-        if (params.length >= 1) {
-            state = State.SIGNEDIN;
-            visitorName = String.join("-", params);
-            return String.format("You signed in as %s.", visitorName);
-        }
-        throw new ResponseException(400, "Expected: <yourname>");
-    }
-
-
-    public String listPets() throws ResponseException {
-        assertSignedIn();
-        PetList pets = server.listPets();
-        var result = new StringBuilder();
-        var gson = new Gson();
-        for (Pet pet : pets) {
-            result.append(gson.toJson(pet)).append('\n');
-        }
-        return result.toString();
-    }
-
-    public String adoptPet(String... params) throws ResponseException {
-        assertSignedIn();
-        if (params.length == 1) {
-            try {
-                int id = Integer.parseInt(params[0]);
-                Pet pet = getPet(id);
-                if (pet != null) {
-                    server.deletePet(id);
-                    return String.format("%s says %s", pet.name(), pet.sound());
-                }
-            } catch (NumberFormatException ignored) {
-            }
-        }
-        throw new ResponseException(ResponseException.Code.ClientError, "Expected: <pet id>");
-    }
-
-    private Pet getPet(int id) throws ResponseException {
-        for (Pet pet : server.listPets()) {
-            if (pet.id() == id) {
-                return pet;
-            }
-        }
-        return null;
     }
 
     public String help() {
@@ -172,9 +121,9 @@ public class ChessClient {
                 """;
     }
 
-    private void assertSignedIn() throws ResponseException {
+    private void assertSignedIn() throws Exception {
         if (state == State.SIGNEDOUT) {
-            throw new ResponseException(ResponseException.Code.ClientError, "You must sign in");
+            throw new Exception();
         }
     }
 }

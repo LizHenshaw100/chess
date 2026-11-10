@@ -8,7 +8,6 @@ import exception.BadRequestException;
 import exception.UnauthorizedException;
 import model.GameData;
 import requestresultclasses.*;
-import service.requestresultclasses.*;
 
 public class GameService {
     AuthService authService;

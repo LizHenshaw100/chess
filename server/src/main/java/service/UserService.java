@@ -9,7 +9,6 @@ import model.AuthData;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 import requestresultclasses.*;
-import service.requestresultclasses.*;
 
 public class UserService {
     UserDAO userDAO;
