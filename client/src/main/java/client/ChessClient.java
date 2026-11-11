@@ -1,22 +1,10 @@
 package client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Locale;
 
 import requestresultclasses.*;
-
-import com.google.gson.Gson;
-
-/*
-import exception.ResponseException;
-import client.websocket.NotificationHandler;
-import server.ServerFacade;
-import client.websocket.WebSocketFacade;
-import webSocketMessages.Notification;
-
-import static client.EscapeSequences.*;
- */
 
 public class ChessClient {
     private String visitorName = null;
@@ -45,7 +33,7 @@ public class ChessClient {
                 case "create" -> createGame(params);
                 case "list" -> listGames();
                 case "join" -> join(params);
-                //case "observe" -> serverFacade.observeGame(params);
+                case "observe" -> observe(params);
                 default -> help();
             };
         } catch (Exception ex) {
@@ -163,6 +151,25 @@ public class ChessClient {
             throw new Exception(params[0] + " is not a number. Please enter a valid game id");
         }
         return "Error";
+    }
+
+    public String observe(String... params) throws Exception {
+        if (params.length != 1) {
+            throw new Exception("You just need to type the game number to observe a game. Try again");
+        }
+        try {
+            int gameID = Integer.parseInt(params[0]);
+            ArrayList<GameSummary> games = serverFacade.listGames(auth).games();
+            for (GameSummary game : games) {
+                if (game.gameID()==gameID) {
+                    return "White board";
+                }
+            }
+            throw new Exception(gameID + " is not a valid game. Use the list command to see valid games");
+        }
+        catch (NumberFormatException e) {
+            throw new Exception(params[0] + " is not a number. Enter the game number to observe a game");
+        }
     }
 
     public String help() {
