@@ -2,6 +2,7 @@ package client;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Locale;
 
 import requestresultclasses.*;
 
@@ -33,7 +34,8 @@ public class ChessClient {
 
     public String eval(String input) {
         try {
-            var tokens = input.toLowerCase().split("\\s");
+            var tokens = input.split("\\s");
+            tokens[0] = tokens[0].toLowerCase();
             var cmd = (tokens.length > 0) ? tokens[0] : "help";
             var params = Arrays.copyOfRange(tokens, 1, tokens.length);
             return switch (cmd) {
@@ -79,7 +81,6 @@ public class ChessClient {
             visitorName = result.username();
             auth = result.authToken();
             state = State.SIGNEDIN;
-            System.out.println("Auth: " + auth);
             return "Welcome back " + visitorName;
         }
         catch(Exception e) {
@@ -144,17 +145,17 @@ public class ChessClient {
         if (params.length != 2) {
             throw new Exception("Incorrect number of parameters. Expected: ID BLACK|WHITE");
         }
-        if (!params[1].equals("white") && !params[1].equals("black")) {
+        if (!params[1].equals("WHITE") && !params[1].equals("BLACK")) {
             throw new Exception(params[1] + " is not a color. Please try again with WHITE or BLACK");
         }
         try {
             int gameID = Integer.parseInt(params[0]);
             JoinGameRequest request = new JoinGameRequest(auth, params[1], gameID);
             serverFacade.joinGame(request, auth);
-            if (params[1].equals("white")) {
+            if (params[1].equals("WHITE")) {
                 return "White Board";
             }
-            if (params[1].equals("black")) {
+            if (params[1].equals("BLACK")) {
                 return "Black Board";
             }
         }
