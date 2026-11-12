@@ -15,10 +15,12 @@ public class ChessClient {
     private final String serverUrl;
     private State state = State.SIGNEDOUT;
     private Repl repl;
+    private ArrayList<GameSummary> gameList;
 
     public ChessClient(String serverUrl, Repl repl) throws Exception {
         serverFacade = new ServerFacade(serverUrl);
         board = new ChessBoardString();
+        gameList = new ArrayList<>();
         this.serverUrl = serverUrl;
         this.repl = repl;
     }
@@ -87,20 +89,27 @@ public class ChessClient {
         serverFacade.logout(request);
         auth = null;
         visitorName = null;
+        gameList.clear();
         state = State.SIGNEDOUT;
         return "Thanks for playing!";
     }
 
     public String createGame(String... params) throws Exception{
         if (state==State.SIGNEDOUT) {
-            throw new Exception("You can't log out when you're not signed in silly");
+            throw new Exception("You can't create a game if you're not signed in silly");
         }
         if(params.length != 1) {
             throw new Exception("Expected 1 parameter. Try again with just the command create and the the name of the game (no white space)");
         }
         CreateGameRequest request = new CreateGameRequest(auth, params[0]);
         CreateGameResult result = serverFacade.createGame(request, auth);
-        return "You have successfully created a game with id " + result.gameID();
+        listGames();
+        for (int i=0; i<gameList.toArray().length; i++) {
+            if (gameList.get(i).gameID() == result.gameID()) {
+                return "You have successfully created a game with id " + i;
+            }
+        }
+        throw new Exception("Error: Contact management");
     }
 
     public String listGames() throws Exception{
@@ -112,9 +121,12 @@ public class ChessClient {
         if (games==null || games.isEmpty()) {
             return "Sorry, there are no games currently. Use create to make one";
         }
+        gameList.clear();
+        gameList.addAll(games);
         String returnString = "";
-        for (GameSummary game : games) {
-            returnString = returnString + "\n" + game.gameName() + ": " + game.gameID() + "\n";
+        for (int i=0; i<gameList.toArray().length; i++) {
+            GameSummary game = gameList.get(i);
+            returnString = returnString + "\n" + game.gameName() + ": " + (i+1) + "\n";
             if (game.whiteUsername() != null) {
                 returnString = returnString + "white: " + game.whiteUsername();
             }
@@ -140,8 +152,9 @@ public class ChessClient {
             throw new Exception(params[1] + " is not a color. Please try again with WHITE or BLACK");
         }
         try {
-            int gameID = Integer.parseInt(params[0]);
-            JoinGameRequest request = new JoinGameRequest(auth, params[1], gameID);
+            int gameID = (Integer.parseInt(params[0])) - 1;
+            int realGameID = gameList.get(gameID).gameID();
+            JoinGameRequest request = new JoinGameRequest(auth, params[1], realGameID);
             serverFacade.joinGame(request, auth);
             if (params[1].equals("WHITE")) {
                 return board.getBoard("WHITE");
@@ -150,8 +163,8 @@ public class ChessClient {
                 return board.getBoard("BLACK");
             }
         }
-        catch (NumberFormatException e) {
-            throw new Exception(params[0] + " is not a number. Please enter a valid game id");
+        catch (NumberFormatException | IndexOutOfBoundsException e) {
+            throw new Exception(params[0] + " is not a valid game id. Please enter a valid game id");
         }
         return "Error";
     }
@@ -161,17 +174,17 @@ public class ChessClient {
             throw new Exception("You just need to type the game number to observe a game. Try again");
         }
         try {
-            int gameID = Integer.parseInt(params[0]);
-            ArrayList<GameSummary> games = serverFacade.listGames(auth).games();
-            for (GameSummary game : games) {
-                if (game.gameID()==gameID) {
+            int gameID = (Integer.parseInt(params[0])) - 1;
+            int realGameID = gameList.get(gameID).gameID();
+            for (GameSummary game : gameList) {
+                if (game.gameID()==realGameID) {
                     return board.getBoard("WHITE");
                 }
             }
             throw new Exception(gameID + " is not a valid game. Use the list command to see valid games");
         }
-        catch (NumberFormatException e) {
-            throw new Exception(params[0] + " is not a number. Enter the game number to observe a game");
+        catch (NumberFormatException | IndexOutOfBoundsException e) {
+            throw new Exception(params[0] + " is not a valid game id. Enter the game number to observe a game");
         }
     }
 
