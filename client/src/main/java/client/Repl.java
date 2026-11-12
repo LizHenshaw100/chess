@@ -2,9 +2,6 @@ package client;
 
 import java.util.Scanner;
 
-import static java.awt.Color.BLUE;
-import static java.awt.Color.RED;
-
 public class Repl {
     private final ChessClient client;
 
