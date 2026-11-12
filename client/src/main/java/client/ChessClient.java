@@ -6,6 +6,10 @@ import java.util.Collection;
 
 import requestresultclasses.*;
 import ui.ChessBoardString;
+import ui.EscapeSequences.*;
+
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
+import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 
 public class ChessClient {
     private String visitorName = null;
@@ -48,10 +52,10 @@ public class ChessClient {
 
     public String register(String... params) throws Exception {
         if (state==State.SIGNEDIN) {
-            throw new Exception("You don't need to create an account, you're already signed in!");
+            throw new Exception(SET_TEXT_COLOR_RED + "You don't need to create an account, you're already signed in!" + RESET_TEXT_COLOR);
         }
         if (params.length != 3) {
-            throw new Exception("Incorrect number of parameters, expected 3");
+            throw new Exception(SET_TEXT_COLOR_RED + "Incorrect number of parameters, expected 3" + RESET_TEXT_COLOR);
         }
         RegisterRequest request = new RegisterRequest(params[0], params[1], params[2]);
         RegisterResult result = serverFacade.register(request);
@@ -63,10 +67,10 @@ public class ChessClient {
 
     public String login(String... params) throws Exception {
         if (state==State.SIGNEDIN) {
-            throw new Exception("You don't need to login, you're already signed in!");
+            throw new Exception(SET_TEXT_COLOR_RED + "You don't need to login, you're already signed in!" + RESET_TEXT_COLOR);
         }
         if (params.length != 2) {
-            throw new Exception("Incorrect number of parameters, expected 2");
+            throw new Exception(SET_TEXT_COLOR_RED + "Incorrect number of parameters, expected 2" + RESET_TEXT_COLOR);
         }
         try {
             LoginRequest request = new LoginRequest(params[0], params[1]);
@@ -77,13 +81,13 @@ public class ChessClient {
             return "Welcome back " + visitorName;
         }
         catch(Exception e) {
-            throw new Exception("Incorrect username or password");
+            throw new Exception(SET_TEXT_COLOR_RED + "Incorrect username or password" + RESET_TEXT_COLOR);
         }
     }
 
     public String logout() throws Exception{
         if (state==State.SIGNEDOUT) {
-            throw new Exception("You can't log out when you're not signed in silly");
+            throw new Exception(SET_TEXT_COLOR_RED + "You can't log out when you're not signed in silly" + RESET_TEXT_COLOR);
         }
         LogoutRequest request = new LogoutRequest(auth);
         serverFacade.logout(request);
@@ -96,10 +100,10 @@ public class ChessClient {
 
     public String createGame(String... params) throws Exception{
         if (state==State.SIGNEDOUT) {
-            throw new Exception("You can't create a game if you're not signed in silly");
+            throw new Exception(SET_TEXT_COLOR_RED + "You can't create a game if you're not signed in silly" + RESET_TEXT_COLOR);
         }
         if(params.length != 1) {
-            throw new Exception("Expected 1 parameter. Try again with just the command create and the the name of the game (no white space)");
+            throw new Exception(SET_TEXT_COLOR_RED + "Expected 1 parameter. Try again with just the command create and the the name of the game (no white space)" + RESET_TEXT_COLOR);
         }
         CreateGameRequest request = new CreateGameRequest(auth, params[0]);
         CreateGameResult result = serverFacade.createGame(request, auth);
@@ -146,10 +150,10 @@ public class ChessClient {
 
     public String join(String... params) throws Exception{
         if (params.length != 2) {
-            throw new Exception("Incorrect number of parameters. Expected: ID BLACK|WHITE");
+            throw new Exception(SET_TEXT_COLOR_RED + "Incorrect number of parameters. Expected: ID BLACK|WHITE" + RESET_TEXT_COLOR);
         }
         if (!params[1].equals("WHITE") && !params[1].equals("BLACK")) {
-            throw new Exception(params[1] + " is not a color. Please try again with WHITE or BLACK");
+            throw new Exception(SET_TEXT_COLOR_RED + params[1] + " is not a color. Please try again with WHITE or BLACK" + RESET_TEXT_COLOR);
         }
         try {
             int gameID = (Integer.parseInt(params[0])) - 1;
@@ -164,14 +168,14 @@ public class ChessClient {
             }
         }
         catch (NumberFormatException | IndexOutOfBoundsException e) {
-            throw new Exception(params[0] + " is not a valid game id. Please enter a valid game id");
+            throw new Exception(SET_TEXT_COLOR_RED + params[0] + " is not a valid game id. Please enter a valid game id" + RESET_TEXT_COLOR);
         }
         return "Error";
     }
 
     public String observe(String... params) throws Exception {
         if (params.length != 1) {
-            throw new Exception("You just need to type the game number to observe a game. Try again");
+            throw new Exception(SET_TEXT_COLOR_RED + "You just need to type the game number to observe a game. Try again" + RESET_TEXT_COLOR);
         }
         try {
             int gameID = (Integer.parseInt(params[0])) - 1;
@@ -181,10 +185,10 @@ public class ChessClient {
                     return board.getBoard("WHITE");
                 }
             }
-            throw new Exception(gameID + " is not a valid game. Use the list command to see valid games");
+            throw new Exception(SET_TEXT_COLOR_RED + gameID + " is not a valid game. Use the list command to see valid games" + RESET_TEXT_COLOR);
         }
         catch (NumberFormatException | IndexOutOfBoundsException e) {
-            throw new Exception(params[0] + " is not a valid game id. Enter the game number to observe a game");
+            throw new Exception(SET_TEXT_COLOR_RED + params[0] + " is not a valid game id. Enter the game number to observe a game" + RESET_TEXT_COLOR);
         }
     }
 
@@ -206,11 +210,5 @@ public class ChessClient {
                 - quit - playing chess
                 - help - with possible commands
                 """;
-    }
-
-    private void assertSignedIn() throws Exception {
-        if (state == State.SIGNEDOUT) {
-            throw new Exception();
-        }
     }
 }
