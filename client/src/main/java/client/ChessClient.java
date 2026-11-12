@@ -5,17 +5,20 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import requestresultclasses.*;
+import ui.ChessBoardString;
 
 public class ChessClient {
     private String visitorName = null;
     private String auth = null;
     private final ServerFacade serverFacade;
+    private ChessBoardString board;
     private final String serverUrl;
     private State state = State.SIGNEDOUT;
     private Repl repl;
 
     public ChessClient(String serverUrl, Repl repl) throws Exception {
         serverFacade = new ServerFacade(serverUrl);
+        board = new ChessBoardString();
         this.serverUrl = serverUrl;
         this.repl = repl;
     }
@@ -141,10 +144,10 @@ public class ChessClient {
             JoinGameRequest request = new JoinGameRequest(auth, params[1], gameID);
             serverFacade.joinGame(request, auth);
             if (params[1].equals("WHITE")) {
-                return "White Board";
+                return board.getBoard("WHITE");
             }
             if (params[1].equals("BLACK")) {
-                return "Black Board";
+                return board.getBoard("BLACK");
             }
         }
         catch (NumberFormatException e) {
@@ -162,7 +165,7 @@ public class ChessClient {
             ArrayList<GameSummary> games = serverFacade.listGames(auth).games();
             for (GameSummary game : games) {
                 if (game.gameID()==gameID) {
-                    return "White board";
+                    return board.getBoard("WHITE");
                 }
             }
             throw new Exception(gameID + " is not a valid game. Use the list command to see valid games");
