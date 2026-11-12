@@ -30,7 +30,7 @@ public class ServerFacade {
     };
 
     public void logout(LogoutRequest request) throws Exception {
-        var request1 = buildRequest("DELETE", "/session", request, null);
+        var request1 = buildRequest("DELETE", "/session", request, request.authToken());
         var response = sendRequest(request1);
         handleResponse(response, null);
     };

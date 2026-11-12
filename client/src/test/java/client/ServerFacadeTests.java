@@ -2,6 +2,7 @@ package client;
 
 import org.junit.jupiter.api.*;
 import requestresultclasses.LoginRequest;
+import requestresultclasses.LogoutRequest;
 import requestresultclasses.RegisterRequest;
 import server.Server;
 
@@ -49,8 +50,20 @@ public class ServerFacadeTests {
 
     @Test
     @DisplayName("Login Fail")
-    public void loginFailure() throws Exception{
+    public void loginFailure() {
         Assertions.assertThrows(Exception.class, () -> facade.login(new LoginRequest("Liz", "Pass")));
+    }
+
+    @Test
+    void logoutSuccess() throws Exception {
+        String auth = facade.register(new RegisterRequest("Liz", "Pass", "test@test.com")).authToken();
+        Assertions.assertDoesNotThrow(() -> facade.logout(new LogoutRequest(auth)));
+        Assertions.assertThrows(Exception.class, () -> facade.listGames(auth));
+    }
+
+    @Test
+    void logoutBadTokenFails() {
+        Assertions.assertThrows(Exception.class, () -> facade.logout(new LogoutRequest("Bad auth")));
     }
 
     @AfterAll
