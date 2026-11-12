@@ -57,12 +57,18 @@ public class ChessClient {
         if (params.length != 3) {
             throw new Exception(SET_TEXT_COLOR_RED + "Incorrect number of parameters, expected 3" + RESET_TEXT_COLOR);
         }
+        //Add try catch here
         RegisterRequest request = new RegisterRequest(params[0], params[1], params[2]);
-        RegisterResult result = serverFacade.register(request);
-        state = State.SIGNEDIN;
-        visitorName = params[0];
-        auth = result.authToken();
-        return "You have successfully registered and have been logged in!";
+        try {
+            RegisterResult result = serverFacade.register(request);
+            state = State.SIGNEDIN;
+            visitorName = params[0];
+            auth = result.authToken();
+            return "You have successfully registered and have been logged in!";
+        }
+        catch (Exception e) {
+            return SET_TEXT_COLOR_RED + "Sorry, that username is already taken." + RESET_TEXT_COLOR;
+        }
     }
 
     public String login(String... params) throws Exception {
@@ -111,7 +117,7 @@ public class ChessClient {
         listGames();
         for (int i=0; i<gameList.toArray().length; i++) {
             if (gameList.get(i).gameID() == result.gameID()) {
-                return "You have successfully created a game with id " + i;
+                return "You have successfully created a game with id " + (i+1);
             }
         }
         throw new Exception("Error: Contact management");
