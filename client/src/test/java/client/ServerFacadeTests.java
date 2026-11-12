@@ -1,9 +1,7 @@
 package client;
 
 import org.junit.jupiter.api.*;
-import requestresultclasses.LoginRequest;
-import requestresultclasses.LogoutRequest;
-import requestresultclasses.RegisterRequest;
+import requestresultclasses.*;
 import server.Server;
 
 import java.net.http.HttpRequest;
@@ -55,6 +53,7 @@ public class ServerFacadeTests {
     }
 
     @Test
+    @DisplayName("Logout Success")
     void logoutSuccess() throws Exception {
         String auth = facade.register(new RegisterRequest("Liz", "Pass", "test@test.com")).authToken();
         Assertions.assertDoesNotThrow(() -> facade.logout(new LogoutRequest(auth)));
@@ -62,8 +61,20 @@ public class ServerFacadeTests {
     }
 
     @Test
+    @DisplayName("Logout Fail")
     void logoutBadTokenFails() {
         Assertions.assertThrows(Exception.class, () -> facade.logout(new LogoutRequest("Bad auth")));
+    }
+
+    @Test
+    @DisplayName("Join Game Success")
+    void joinGameSuccess() throws Exception{
+        String auth = facade.register(new RegisterRequest("Liz", "Pass", "test@test.com")).authToken();
+        int gameID = facade.createGame(new CreateGameRequest(auth, "LizsGame"), auth).gameID();
+        facade.joinGame(new JoinGameRequest(auth, "BLACK", gameID), auth);
+        var game = facade.listGames(auth).games().iterator().next();
+        Assertions.assertEquals("Liz", game.blackUsername());
+
     }
 
     @AfterAll
