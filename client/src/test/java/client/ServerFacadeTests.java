@@ -21,18 +21,23 @@ public class ServerFacadeTests {
     }
 
     @BeforeEach
-    public static void beforeEach() throws Exception {
+    public void beforeEach() throws Exception {
         facade.clear();
     }
 
     @Test
     @DisplayName("Register Success")
-    public void registerSucces() throws Exception {
+    public void registerSuccess() throws Exception {
         var result = facade.register(new RegisterRequest("Liz", "Pass", "test@test.com"));
         Assertions.assertNotNull(result.authToken());
     }
 
-    
+    @Test
+    @DisplayName("Register Failure")
+    public void registerFail() throws Exception {
+        Assertions.assertThrows(Exception.class ,() -> facade.register(new RegisterRequest("Liz", "Pass", "test@test.com")));
+
+    }
 
     @AfterAll
     static void stopServer() {
