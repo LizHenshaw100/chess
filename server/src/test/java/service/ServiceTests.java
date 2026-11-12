@@ -170,7 +170,8 @@ public class ServiceTests {
         int gameID1 = gameService.createGame(request1).gameID();
         CreateGameRequest request2 = new CreateGameRequest(authToken, "test 2");
         int gameID2 = gameService.createGame(request2).gameID();
-        ArrayList<GameSummary> expected = (ArrayList<GameSummary>) List.of(new GameSummary(gameID1, null, null, "test 1"), new GameSummary(gameID2, null, null, "test 2"));
+        ArrayList<GameSummary> expected = (ArrayList<GameSummary>)
+                List.of(new GameSummary(gameID1, null, null, "test 1"), new GameSummary(gameID2, null, null, "test 2"));
         ArrayList<GameSummary> actual = gameService.listGames(new ListGamesRequest(authToken)).games();
         Assertions.assertEquals(expected, actual);
     }

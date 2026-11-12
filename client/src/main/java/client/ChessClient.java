@@ -103,7 +103,8 @@ public class ChessClient {
             throw new Exception(SET_TEXT_COLOR_RED + "You can't create a game if you're not signed in silly" + RESET_TEXT_COLOR);
         }
         if(params.length != 1) {
-            throw new Exception(SET_TEXT_COLOR_RED + "Expected 1 parameter. Try again with just the command create and the the name of the game (no white space)" + RESET_TEXT_COLOR);
+            throw new Exception(SET_TEXT_COLOR_RED + "Expected 1 parameter. " +
+                    "Try again with just the command create and the the name of the game (no white space)" + RESET_TEXT_COLOR);
         }
         CreateGameRequest request = new CreateGameRequest(auth, params[0]);
         CreateGameResult result = serverFacade.createGame(request, auth);
@@ -188,7 +189,8 @@ public class ChessClient {
             throw new Exception(SET_TEXT_COLOR_RED + gameID + " is not a valid game. Use the list command to see valid games" + RESET_TEXT_COLOR);
         }
         catch (NumberFormatException | IndexOutOfBoundsException e) {
-            throw new Exception(SET_TEXT_COLOR_RED + params[0] + " is not a valid game id. Enter the game number to observe a game" + RESET_TEXT_COLOR);
+            throw new Exception(SET_TEXT_COLOR_RED + params[0] + " is not a valid game id. " +
+                    "Enter the game number to observe a game" + RESET_TEXT_COLOR);
         }
     }
 
